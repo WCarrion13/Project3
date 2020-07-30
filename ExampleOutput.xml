@@ -9,3 +9,5 @@
     <shelters>
         <shelterName>
         <shelterCapacity>
+
+city, population, numShelters, shelterNumName, shelterNumCapacity, numAdjCities, adjCityNumName, adjCityNumRoadCapacity;
