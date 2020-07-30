@@ -2,16 +2,12 @@
 #include "Graph.h"
 #include <fstream>
 #include <iomanip>
-#include <iostream>
-#include <map>
-#include <set>
-#include <string>
-#include <vector>
+
 using namespace std;
 
 
 class DataGenerator {
-	//set<string>* cityList;
+private:
 	Graph* cityGraph;
 	char numbers[11] = "0123456789";
 	char lettersLC[27] = "abcdefghijklmnopqrstuvwxyz";
@@ -48,6 +44,6 @@ public:
 
 
 	/*Display*/
-	void OutputToCSV();
+	void OutputToCSV(string filename);
 	void Debug();
 };

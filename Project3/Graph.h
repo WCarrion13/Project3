@@ -2,7 +2,6 @@
 #include<iostream>
 #include<map>
 #include<set>
-#include<sstream>
 #include<string>
 #include<vector>
 using namespace std;
@@ -10,7 +9,6 @@ using namespace std;
 //Implements a directed, weighted graph as an Adjacency List
 class Graph {
 private:
-	//map<int, vector<pair<int, int>>> graph;
 	map<string, map<string, int>>* graph;
 
 public:

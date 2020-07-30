@@ -85,8 +85,8 @@ void DataGenerator::GenerateCities() {
 }
 
 
-void DataGenerator::OutputToCSV() {
-	file.open("test.csv");
+void DataGenerator::OutputToCSV(string filename) {
+	file.open(filename);
 	for (auto city = cityGraph->Begin(); city != cityGraph->End(); city++) {
 		int population = Rand(minPopulation, maxPopulation);
 		int numShelters = Rand(minNumShelters, maxNumShelters);
