@@ -8,50 +8,6 @@
 #include<queue>
 using namespace std;
 
-bool BFS_isConnected(Graph &roadNet, string source, string dest) {
-    //Create a queue inorder to commence BFS
-    queue<string> que;
-    //Start by pushing source into the queue
-    que.push(source);
-    //Create a map that will store all of the cities we have already discovered so that we don't end up in a loop
-    map<string, bool> discovered;
-
-    //While the queue is not empty keep searching for a path to the sink node
-    while(!que.empty()) {
-        //create a string to store the city we're currently visiting
-        string currentCity = que.front();
-
-        /*if we are currently at sink node then we have a path, else we are in an inbetween city that is now discovered */
-        if (currentCity == dest) {
-            return true;
-        }
-        else {
-            discovered[currentCity] = true;
-        }
-
-        /*Iterate through the cities that are connected to the city we are currently visiting and if it hasn't been visted before then it is added to the queue */
-        map<string, int>::iterator it;
-        for (it = (*roadNet.Find(currentCity)).second.begin(); it != (*roadNet.Find(currentCity)).second.end(); it++) {
-            if (discovered.find(it->first) == discovered.end()) {
-                discovered[it->first] = false;
-
-                que.push(it->first);
-            }
-        }
-        //Remove the current city from the front of the queue
-        que.pop();
-    }
-    /*If we have itereated through all of the cities and haven't found a path from the source to the sink node then we return false */
-    return false;
-}
-
-/*for (auto iter = roadFlow.Begin(); iter != roadFlow.End(); iter++) {
-    cout << iter->first;
-    for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++)
-        cout << "," << iter2->first << "," << iter2->second;
-    cout << endl;
-} */
-
 class FordFulkerson {
 private:
     class Edge {
