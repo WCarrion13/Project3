@@ -1,11 +1,10 @@
+#pragma once
 #include "DataGenerator.h"
 #include "Reader.h"
 
 int main() {
 	int numCities = 10000;
-	int minCityNameLength = 5;
-	int maxCityNameLength = 7;
-	DataGenerator gen(numCities, minCityNameLength, maxCityNameLength);
+	DataGenerator gen(numCities);
 	Reader reader;
 	string filename = "test.csv";
 
@@ -15,12 +14,10 @@ int main() {
 	reader.ReadCSV(filename);	//Read data
 	Graph* graph = reader.GetGraph();
 	map<string, City*>* cities = reader.GetCityList();
+	string source = reader.GetRandomCity();
+	string sink = reader.GetRandomCity();
 
 	//Rest of algorithms here//
-
-
-
-
 
 	return 0;
 }

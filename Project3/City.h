@@ -1,7 +1,6 @@
 #pragma once
 #include "Graph.h"
 
-
 class City {
 private:
 	string name;

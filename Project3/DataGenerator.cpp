@@ -1,58 +1,45 @@
 #include "DataGenerator.h"
 
-DataGenerator::DataGenerator(int numCities, int minCityNameLength, int maxCityNameLength) {
-	this->cityGraph = new Graph;
+DataGenerator::DataGenerator(int numCities) {
+	cityGraph = new Graph;
 	this->numCities = numCities;
-	this->minCityNameLength = minCityNameLength;
-	this->maxCityNameLength = maxCityNameLength;
-}
 
-char DataGenerator::GetRandomChar(string type) {
-	int typeNum = 0;
-	if (type == "num")
-		typeNum = 0;
-	else if (type == "lc")
-		typeNum = 1;
-	else if (type == "uc")
-		typeNum = 2;
-	char c;
-	switch (typeNum) {
-	case 0:
-		c = numbers[rand() % 10];
-		break;
-	case 1:
-		c = lettersLC[rand() % 26];
-		break;	
-	case 2:
-		c = lettersUC[rand() % 26];
-	}
-	return c;
-}
+	prefix.push_back("City of ");
 
-void DataGenerator::Debug() {
-	cityGraph->PrintGraph();
+	suffix.push_back("ville");
+	suffix.push_back("town");
+	suffix.push_back("land");
+	suffix.push_back("ington");
+	suffix.push_back("ford");
+	suffix.push_back("ayton");
+	suffix.push_back("ester");
+	suffix.push_back("ton");
+	suffix.push_back("son");
+	suffix.push_back("urn");
+
+	limits["cityName"] = make_pair(5, 7);				//Generate various variable limits
+	limits["adjCities"] = make_pair(1, 3);
+	limits["roadCapacity"] = make_pair(1, 10);
+	limits["population"] = make_pair(10000, 1000000);
+	limits["shelters"] = make_pair(0, 3);
+	limits["shelterCapacity"] = make_pair(1000, 10000);
 }
 
 string DataGenerator::GenerateCityName() {
-	int nameType = rand() % 3 + 1;
-	int nameLength = Rand(minCityNameLength, maxCityNameLength);
+	int nameType = GetRandInt(1,3);		//Select name template type
+	int nameLength = GetRandInt(limits["cityName"]);
 	while (true) {
 		string name = "";
-		name += GetRandomChar("uc");
+		name += GetUC();
 		for (int letter = 0; letter < nameLength; letter++)
-			name += GetRandomChar("lc");
+			name += GetLC();
 
-		switch (nameType) {
-		case 1:		//Add beginning string
-			name = "City of " + name;
-			break;
-		case 2:		//Add end string
-			name += ends[Rand(1, ends->size())];	
-			break;
-		case 3:		//No addition
-			break;
-		}
-		if (!cityGraph->Exists(name))	//Check if name already exists
+		if (nameType == 1)	
+			name = prefix[GetRandInt(0, prefix.size() - 1)] + name;		//Add beginning string
+		else if (nameType == 2)
+			name += suffix[GetRandInt(0, suffix.size() - 1)];			//Add end string
+
+		if (!cityGraph->Exists(name))	//If name does not already exist, pass to function output
 			return name;
 	}
 }
@@ -60,42 +47,42 @@ string DataGenerator::GenerateCityName() {
 void DataGenerator::GenerateCities() {
 	string from = GenerateCityName();
 	string to = GenerateCityName();
-	int weight = Rand(minWeight, maxWeight);
-	cityGraph->InsertEdge(from, to, weight);	//Generate two starting cities
+	int weight = GetRandInt(limits["roadCapacity"]);
+	cityGraph->InsertEdge(from, to, weight);		//Generate two starting cities
 	cityGraph->InsertEdge(to, from, weight);
-	while (cityGraph->GetSize() <= numCities) {		//Generate an additional city
+	while (cityGraph->GetSize() < numCities) {		//Generate "numCities" additional cities
 		from = GenerateCityName();
-		int numAdjCities = (maxAdjCities > cityGraph->GetSize()) ? maxAdjCities : Rand(minAdjCities, maxAdjCities);	//Ensure adj cities does not exceed existing city count
+		int numAdjCities = (limits["adjCities"].second > cityGraph->GetSize()) ? cityGraph->GetSize() : GetRandInt(limits["adjCities"]);	//Ensure adj cities does not exceed existing city count
 		set<string> adjCities = {};
 		int adjCityIndex = 0;
-		for (int city = 0; city < numAdjCities; city++) {	//Generate connections to/from city
-			adjCityIndex = Rand(0, cityGraph->GetSize() - 1);
+		for (int city = 0; city < numAdjCities; city++) {			//Generate connections to/from city
+			adjCityIndex = GetRandInt(0, cityGraph->GetSize() - 1);
 			auto iter = cityGraph->Begin();
 			for (int index = 0; index < adjCityIndex; index++)		//Find random city in graph
 				iter++;
 			to = iter->first;
 			if ((to != from) && (adjCities.find(to) == adjCities.end())) {	//Check if adj city found is unique
-				weight = Rand(minWeight, maxWeight);
+				weight = GetRandInt(limits["roadCapacity"]);
 				cityGraph->InsertEdge(from, to, weight);	//Insert two-way connection
 				cityGraph->InsertEdge(to, from, weight);
+				adjCities.insert(to);
 			} else
 				city--;
 		}
 	}
 }
 
-
 void DataGenerator::OutputToCSV(string filename) {
-	file.open(filename);
+	ofstream file(filename, ios_base::out);
 	for (auto city = cityGraph->Begin(); city != cityGraph->End(); city++) {
-		int population = Rand(minPopulation, maxPopulation);
-		int numShelters = Rand(minNumShelters, maxNumShelters);
+		int population = GetRandInt(limits["population"]);
+		int numShelters = GetRandInt(limits["shelters"]);
 		int numAdjCities = city->second.size();
 
 		file << city->first << "," << population << "," << numShelters << ",";	//Print shelter info
 		for (int i = 0; i < numShelters; i++) {
-			string shelterName = to_string(i);
-			int shelterCapacity = Rand(minShelterCapacity, maxShelterCapacity);
+			string shelterName = "Shelter " + to_string(i);
+			int shelterCapacity = GetRandInt(limits["shelterCapacity"]);
 			file << shelterName << "," << shelterCapacity << ",";
 		}
 

@@ -1,5 +1,13 @@
 #include "Reader.h"
 
+string Reader::GetRandomCity() {
+	int index = GetRandInt(0, cityList->size() - 1);
+	auto iter = cityList->begin();
+	for (int i = 0; i < index; i++)		//Find random city in graph
+		iter++;
+	return iter->first;
+}
+
 void Reader::AddCities() {
 	for (auto iter = cityList->begin(); iter != cityList->end(); iter++)	//Add adj city map to each city for eaasy access
 		iter->second->AddAdjCity(&graph->Find(iter->first)->second);

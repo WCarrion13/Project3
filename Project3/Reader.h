@@ -1,10 +1,11 @@
 #pragma once
 #include "City.h"
+#include "Randomizer.h"
 #include <fstream>
 #include <sstream>
+using namespace rnd;
 
 class Reader {
-private:
 	Graph* graph;
 	map<string, City*>* cityList;
 
@@ -18,6 +19,7 @@ public:
 	//Accessors
 	Graph* GetGraph() { return graph; }
 	map<string, City*>* GetCityList() { return cityList; }
+	string GetRandomCity();
 
 	//Mutators
 	void AddCities();
