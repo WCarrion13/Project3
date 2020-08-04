@@ -2,6 +2,8 @@
 #pragma once
 #include "DataGenerator.h"
 #include "Reader.h"
+#include "FordFulkerson.h"
+#include "PushRelabel.h"
 
 int main() {
 	int numCities = 10000;
