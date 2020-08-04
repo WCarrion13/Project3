@@ -404,7 +404,6 @@ City Graph::getCity(string nameCity) {
 // Driver program to test above functions
 int main()
 {
-    vector<City>cityName;
     int numCity = 6;
     int population, numShelter, shelterCapacity;
     string nameCity;
