@@ -112,7 +112,9 @@ class NetworkPR
 
     };
 
-    int V;    // No. of city
+    string source; //Source city
+    string sink; //Destination city;
+    int V = 0;    // No. of city
     // Map the city to integer
     vector<string>cityName;
     vector<CityPR> city;
@@ -132,7 +134,7 @@ class NetworkPR
 public:
 
     NetworkPR(int V);  // Constructor
-    NetworkPR (map<string, City*>* roadNetWork, string source, string sink);
+    NetworkPR (map<string, City*>& roadNetWork);
     NetworkPR(const NetworkPR& rhs); // Copy constructor
     NetworkPR& operator=(const NetworkPR& rhs); // copy assignment operator
     ~NetworkPR();
@@ -338,7 +340,7 @@ int NetworkPR::getMaxFlow(string s, string t)
     // loop untill none of the City is in overflow
     while (overFlowVertex(city, s, t) != "")
     {
-        string u = overFlowVertex(city,s ,t);
+        string u = overFlowVertex(city, s, t);
         bool testValue = push(u);
         if (!testValue)
         {
@@ -381,7 +383,7 @@ void NetworkPR::initializeCity(string cityName, int population, int numShelter, 
 void NetworkPR::printTheMaximumFlow(string from, string to)
 {
     int rate = getMaxFlow(from,to);
-    cout<< "The maximum people that people can evacuate to city  "<< to << " from"<< " is: " << rate<< "/hour";
+    cout << "The maximum amount of people that can evacuate to "<< to << " from" << from << " is: " << rate << "/hour" << endl;
     //int numPeopleCanStayInCity = city[matchingCity(from)].capacity;
     //cout<< "The maximum number of people can stay in the city is "<< numPeopleCanStayInCity<<endl;
 }
@@ -461,9 +463,22 @@ NetworkPR::~NetworkPR()
     roadNetwork.clear();
 }
 
-NetworkPR::NetworkPR(map<string, City *> *roadNetWork, string source, string sink) {
-    string from = source;
-    string to = sink;
+NetworkPR::NetworkPR(map<string, City *>& roadNetWork) {
+
+    for (auto it = roadNetWork.begin(); it != roadNetWork.end(); it++) {
+        City* currentCity = it->second;
+        CityPR cityInfo = CityPR(0, 0, currentCity->GetPopulation(), (int) currentCity->GetShelters().size(), 1000, it->first);
+        V++;
+        cityName.push_back(currentCity->GetName());
+        city.push_back(cityInfo);
+
+        map<string, int>* adjCities =  currentCity->GetAdjCities();
+        for (auto it2 = (*adjCities).begin(); it2 != (*adjCities).end(); it2++) {
+            Road currentRoad = Road(0, it2->second, it->first, it2->first);
+            road.push_back(currentRoad);
+        }
+
+    }
 
 }
 
