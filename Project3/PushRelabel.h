@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 using namespace std;
+// Global function
+// Initializing a road network including city
 
 struct Road
 {
@@ -112,7 +114,9 @@ class Graph
     // Map the city to integer
     vector<string>cityName;
     vector<City> city;
-    vector<Road> road;
+    vector<City> cityCopy; // This vector is used to copy all the city to a new graph
+    vector<Road> road; // This vector is used to store all the edges to implement push and relabel algorithm
+    vector<Road> roadNetwork; //This vector is used to store the road network to perform finding city
     // Function to push excess flow from from
     bool push(string from);
     // Function to relabel a vertex from
@@ -126,6 +130,9 @@ class Graph
 public:
 
     Graph(int V);  // Constructor
+    Graph(const Graph& rhs); // Copy constructor
+    Graph& operator=(const Graph& rhs); // copy assignment operator
+    ~Graph();
     int matchingCity(string cityName);
     City getCity(string nameCity);
     //void pairingCityWithNumber();
@@ -140,10 +147,17 @@ public:
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
     float timeTakeToEvac(Hurricane hurricane, City city, string from, string to);
+    //Get the list of cities that the current city connect to
+    vector <City> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
     void decisionMaking (float timeEvac, City city, Hurricane hurricane);
 
 };
+Graph::Graph(int V)
+{
+    this->V = V;
+    // all cities are initialized with 0 height and 0 excess flow
+}
 
 int Graph::matchingCity(string name)
 {
@@ -159,17 +173,13 @@ int Graph::matchingCity(string name)
     }
 }
 
-Graph::Graph(int V)
-{
-    this->V = V;
-    // all cities are initialized with 0 height and 0 excess flow
-}
+
 
 void Graph::addRoad(string u, string v, int capacity)
 {
     // flow is initialized with 0 for all road
     road.push_back(Road(0, capacity, u, v));
-
+    roadNetwork.push_back(Road(0,capacity,u,v));
     if(cityName.empty())
     {
         cityName.push_back(u);
@@ -331,8 +341,7 @@ int Graph::getMaxFlow(string s, string t)
             relabel(u);
         }
     }
-    // city.back() returns last City, whose
-    // e_flow will be final maximum flow
+    // city.back() returns last City, whose e_flow will be final maximum flow
     int cityE_flow = city[matchingCity(t)].e_flow;
     return city[matchingCity(t)].e_flow;
 }
@@ -350,7 +359,6 @@ void Graph::neighboringCity(string name) {
     }
     for(int i = 0; i< road.size(); i++)
     {
-
         // City that connect from other city
         if(road[i].to == name)
         {
@@ -363,6 +371,7 @@ void Graph::neighboringCity(string name) {
 
 void Graph::initializeCity(string cityName, int population, int numShelter, int shelterCapacity) {
     city.push_back(City(0,0, population, numShelter, shelterCapacity, cityName));
+    cityCopy = city;
 }
 
 void Graph::printTheMaximumFlow(string from, string to)
@@ -403,6 +412,51 @@ City Graph::getCity(string nameCity) {
     return City(0,0);
 }
 
+vector<City> Graph::connectTo(string name) {
+    vector<City>connect;
+    for(int i = 0; i< road.size(); i++)
+    {
+        //City that connect to city
+        if(road[i].from == name)
+        {
+            for(auto it = city.begin(); it!= city.end(); it++)
+            {
+                if(it->name == road[i].to)
+                {
+                    connect.push_back(*it);
+                }
+            }
+        }
+    }
+    return connect;
+}
+
+Graph::Graph(const Graph &rhs) {
+    V = rhs.V;
+    cityName = rhs.cityName;
+    city = rhs.cityCopy;
+    road = rhs.roadNetwork;
+    roadNetwork = rhs.roadNetwork;
+
+}
+Graph& Graph::operator=(const Graph &rhs) {
+    V = rhs.V;
+    cityName = rhs.cityName;
+    city = rhs.cityCopy;
+    road = rhs.roadNetwork;
+    roadNetwork = rhs.roadNetwork;
+    return *this;
+}
+
+Graph::~Graph()
+{
+    V = 0;
+    cityName.clear();
+    city.clear();
+    road.clear();
+    roadNetwork.clear();
+}
+
 // Driver program to test above functions
 /*
 int main()
@@ -434,14 +488,36 @@ int main()
     g.addRoad("e", "d", 7);
     g.addRoad("e", "f", 4);
     // Initialize source and sink
-    string s = "a", t = "f";
+    string s = "e", t = "f";
+    //Teting the maximum flow function
     cout << "Maximum flow is " << g.getMaxFlow(s,t);
     cout<<endl;
+
+    //Testing max flow in reverse directiom
+    string s2 = "e", t2 = "f";
+    cout<<"Hello"<<endl;
+    Graph g2(6);
+    g2 = g;
+    cout<< "Maximum flow of reverse edge e to f "<<g2.getMaxFlow(s2, t2)<<endl;
+    // Result can't do so -> will create an infinite loop when do the reverse. Need to create a new networm
+    // To find another maximum flow
+
+
+    //Testing the function neighboring CIty
     g.neighboringCity("a");
+    //Testing the function connectTo
+    vector<City> test = g.connectTo("f");
+    for(City test1: test)
+    {
+        cout<< test1.name<<endl;
+    }
+    //Testing retrieving a city from a network
     City a = g.getCity("a");
     cout<<a.population;
     cout<<endl;
     //g.printAllEdges();
     return 0;
+
 }
+
 */
