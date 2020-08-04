@@ -19,7 +19,8 @@ DataGenerator::DataGenerator(int numCities) {
 
 	limits["cityName"] = make_pair(5, 7);				//Generate various variable limits
 	limits["adjCities"] = make_pair(1, 3);
-	limits["roadCapacity"] = make_pair(1, 10);
+	//Altered the road capacity to be more realistic
+	limits["roadCapacity"] = make_pair(200, 1000);
 	limits["population"] = make_pair(10000, 1000000);
 	limits["shelters"] = make_pair(0, 3);
 	limits["shelterCapacity"] = make_pair(1000, 10000);
@@ -34,7 +35,7 @@ string DataGenerator::GenerateCityName() {
 		for (int letter = 0; letter < nameLength; letter++)
 			name += GetLC();
 
-		if (nameType == 1)	
+		if (nameType == 1)
 			name = prefix[GetRandInt(0, prefix.size() - 1)] + name;		//Add beginning string
 		else if (nameType == 2)
 			name += suffix[GetRandInt(0, suffix.size() - 1)];			//Add end string

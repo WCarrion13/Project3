@@ -8,18 +8,18 @@ using namespace std;
 
 //Implements a directed, weighted graph as an Adjacency List
 class Graph {
-	map<string, map<string, int>>* graph;
+	map<string, map<string, int> >* graph;
 
 public:
 	//Constructor
 	Graph() {
-		this->graph = new map<string, map<string, int>>;
+		this->graph = new map<string, map<string, int> >;
 	}
 
 	//Mutators
-	map<string, map<string, int>>::iterator Find(string key) {	return graph->find(key); }
-	map<string, map<string, int>>::iterator Begin() { return graph->begin(); }
-	map<string, map<string, int>>::iterator End() { return graph->end(); }
+	map<string, map<string, int> >::iterator Find(string key) {	return graph->find(key); }
+	map<string, map<string, int> >::iterator Begin() { return graph->begin(); }
+	map<string, map<string, int> >::iterator End() { return graph->end(); }
 	bool Exists(string key);
 	void InsertEdge(string from, string to, int weight);
 	bool IsEdge(string from, string to);
@@ -28,7 +28,7 @@ public:
 	int GetSize() { return graph->size(); }
 	int GetWeight(string from, string to) {	return graph->find(from)->second[to]; };
 	set<string> GetAdjCities(string from);
-	
+
 	//Output
 	void PrintGraph();
 };

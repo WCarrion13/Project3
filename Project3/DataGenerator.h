@@ -9,7 +9,7 @@ class DataGenerator {
 	Graph* cityGraph;
 	vector<string> prefix;
 	vector<string> suffix;
-	map<string, pair<int, int>> limits;
+	map<string, pair<int, int> > limits;
 	int numCities;
 
 public:
