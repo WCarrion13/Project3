@@ -1,29 +1,37 @@
+#include <iostream>
 #include "DataGenerator.h"
 #include "Reader.h"
 #include "FordFulkerson.h"
-#include "PushRelabel.h"
+//#include "PushRelabel.h"
 
-int main() {
-	int numCities = 10000;
-	DataGenerator gen(numCities);
-	Reader reader;
-	string filename = "test.csv";
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    std::cout << "Hello, World!\n";
 
-	gen.GenerateCities();		//Generate random data
-	gen.OutputToCSV(filename);
+    int numCities = 10;
+    DataGenerator gen(numCities);
+    Reader reader;
+    string filename = "test.csv";
 
-	reader.ReadCSV(filename);	//Read data
-	Graph* graph = reader.GetGraph();
-	map<string, City*>* cities = reader.GetCityList();
-	string source = reader.GetRandomCity();
-	string sink = reader.GetRandomCity(source);
+    gen.GenerateCities();        //Generate random data
+    gen.OutputToCSV(filename);
+    reader.ReadCSV(filename);    //Read data
+    Graph* graph = reader.GetGraph();
+    map<string, City*>* cities = reader.GetCityList();
+    string source = reader.GetRandomCity();
+    string sink = reader.GetRandomCity(source);
 
-	//Rest of algorithms here//
-	FordFulkerson fordfulkerson(graph, source, sink);
 
-	int var = fordfulkerson.maxFlow();
+    //Rest of algorithms here//
+    FordFulkerson var1(*cities, source, sink);
 
-	cout << "Max flow is: " << var << endl;
+    int var = var1.maxFlow();
+    var1.PrintGraph();
 
-	return 0;
+    cout << endl;
+
+    cout << "Max flow is: " << var << endl;
+
+
+    return 0;
 }
