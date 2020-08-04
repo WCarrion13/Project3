@@ -20,7 +20,7 @@ DataGenerator::DataGenerator(int numCities) {
 	limits["cityName"] = make_pair(5, 7);				//Generate various variable limits
 	limits["adjCities"] = make_pair(1, 3);
 	//Altered the road capacity to be more realistic
-	limits["roadCapacity"] = make_pair(200, 1000);
+	limits["roadCapacity"] = make_pair(200, 1500);
 	limits["population"] = make_pair(10000, 1000000);
 	limits["shelters"] = make_pair(0, 3);
 	limits["shelterCapacity"] = make_pair(1000, 10000);
@@ -83,7 +83,8 @@ void DataGenerator::OutputToCSV(string filename) {
 		file << city->first << "," << population << "," << numShelters << ",";	//Print shelter info
 		for (int i = 0; i < numShelters; i++) {
 			string shelterName = "Shelter " + to_string(i);
-			int shelterCapacity = GetRandInt(limits["shelterCapacity"]);
+            //Made it so that every shelter has a capacity of 1000 people
+            int shelterCapacity = 1000; //GetRandInt(limits["shelterCapacity"]);
 			file << shelterName << "," << shelterCapacity << ",";
 		}
 
