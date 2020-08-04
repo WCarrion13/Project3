@@ -402,8 +402,11 @@ City Graph::getCity(string nameCity) {
 }
 
 // Driver program to test above functions
+/*
 int main()
 {
+
+}
     int numCity = 6;
     int population, numShelter, shelterCapacity;
     string nameCity;
@@ -440,5 +443,6 @@ int main()
     cout<<endl;
     //g.printAllEdges();
     return 0;
-}
 
+}
+*/
