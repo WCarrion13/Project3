@@ -3,6 +3,7 @@
 #include<iostream>
 #include<map>
 #include"Graph.h"
+#include"City.h"
 #include<string>
 #include<vector>
 #include<queue>
