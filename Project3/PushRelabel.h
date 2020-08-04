@@ -6,7 +6,6 @@
 #include"Graph.h"
 #include"City.h"
 using namespace std;
-// Global function
 // Initializing a road network including city
 class Hurricane
 {
@@ -125,8 +124,8 @@ class NetworkPR
     string sink; //Destination city;
     int V = 0;    // No. of city
     // Map the city to integer
-    vector<string>cityName;
-    vector<CityPR> city;
+    vector<string>cityName;  //Mapping city name into number
+    vector<CityPR> city;    // Manipulate the execess flow and the height of each city or node
     vector<CityPR> cityCopy; // This vector is used to copy all the city to a new graph
     vector<Road> road; // This vector is used to store all the edges to implement push and relabel algorithm
     vector<Road> roadNetwork; //This vector is used to store the road network to perform finding city
@@ -452,7 +451,7 @@ void NetworkPR::decisionMaking(float timeEvac, string from, string to, Hurricane
 }
 
 CityPR NetworkPR::getCity(string nameCity) {
-    for(auto it = city.begin(); it != city.end(); it++)
+    for(auto it = cityCopy.begin(); it != cityCopy.end(); it++)
     {
         if (it->name == nameCity) {
             return *it;
