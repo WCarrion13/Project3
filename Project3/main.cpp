@@ -1,5 +1,3 @@
-
-#pragma once
 #include "DataGenerator.h"
 #include "Reader.h"
 #include "FordFulkerson.h"
@@ -21,6 +19,11 @@ int main() {
 	string sink = reader.GetRandomCity(source);
 
 	//Rest of algorithms here//
+	FordFulkerson fordfulkerson(graph, source, sink);
+
+	int var = fordfulkerson.maxFlow();
+
+	cout << "Max flow is: " << var << endl;
 
 	return 0;
 }

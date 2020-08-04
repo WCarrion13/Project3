@@ -28,8 +28,8 @@ private:
         }
     };
 
-    map<string, vector<Edge>> originalGraph;
-    map<string, vector<Edge>> residualGraph;
+    map<string, vector<Edge> > originalGraph;
+    map<string, vector<Edge> > residualGraph;
     string source;
     string destination;
 
@@ -53,9 +53,9 @@ public:
         //Create the residual graph exactly the same as Original
         residualGraph = originalGraph;
     }
-    map<string, pair<string, int>> BFS() {
+    map<string, pair<string, int> > BFS() {
         //Storing the path we took from source to dest node. Organized as map<string to, string from>.
-        map<string, pair<string, int>> path;
+        map<string, pair<string, int> > path;
         //Create a map that keeps track of nodes we have visited
         map<string, bool> visited;
         visited[source] = true;
@@ -95,9 +95,9 @@ public:
         return path;
     }
 
-    int UpdateGraph (map<string, pair<string, int>>& path) {
+    int UpdateGraph (map<string, pair<string, int> >& path) {
         //New graph we will use
-        map<string, vector<Edge>> updatedGraph = originalGraph;
+        map<string, vector<Edge> > updatedGraph = originalGraph;
 
         int pathFlow = 0;
         int minRemainCap = 999999999;
