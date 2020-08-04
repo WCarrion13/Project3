@@ -105,6 +105,18 @@ class NetworkPR
             }
 
         }
+        int getSpeed()
+        {
+            return speed;
+        }
+        int getDistance()
+        {
+            return distance;
+        }
+        string getTheCategory()
+        {
+            return category;
+        }
         int timeToMakeLandFall()
         {
             return distance/speed; // in hour
@@ -151,11 +163,11 @@ public:
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
-    float timeTakeToEvac(Hurricane hurricane, CityPR city, string from, string to);
+    float timeTakeToEvac(Hurricane hurricane, string from, string to);
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
-    void decisionMaking (float timeEvac, City city, Hurricane hurricane);
+    void decisionMaking (float timeEvac, string from, string to, NetworkPR::Hurricane hurricane);
 
 };
 NetworkPR::NetworkPR(int V)
@@ -396,15 +408,43 @@ NetworkPR::Hurricane NetworkPR::createHurricane()
     return Hurricane(randomSpeed, distance);
 }
 
-float NetworkPR::timeTakeToEvac(NetworkPR::Hurricane hurricane, CityPR city, string from, string to) {
-    int population = city.population; // get the city population
+float NetworkPR::timeTakeToEvac(NetworkPR::Hurricane hurricane, string from, string to) {
+    CityPR runAway = getCity(from);
+    int population = runAway.population;
     int numberPeopleEvacPerHour = getMaxFlow(from, to); //
-    int timeLandFall = hurricane.timeToMakeLandFall();
-    float timeToTakePeopleEvac = float(population)/numberPeopleEvacPerHour;
-    return timeToTakePeopleEvac;
+    float totalTimeTakeToEvac = float(population)/numberPeopleEvacPerHour;
+    return totalTimeTakeToEvac;
 }
 
-void NetworkPR::decisionMaking(float timeEvac, City city, Hurricane hurricane) {
+void NetworkPR::decisionMaking(float timeEvac, string from, string to, NetworkPR::Hurricane hurricane) {
+    CityPR runAway = getCity(from);
+    CityPR runTo = getCity(to);
+    int populationCity = runAway.population;
+    int timeMakeLandFall = hurricane.timeToMakeLandFall();
+    cout<<"The hurricane speed is "<< hurricane.getSpeed()<<endl;
+    cout<<"It falls into "<< hurricane.getTheCategory();
+    if(hurricane.getTheCategory() == "Category 5" || hurricane.getTheCategory() == "Category 4" || hurricane.getTheCategory() == "Category 3" )
+    {
+        cout<<"DANGER: THE HURRICANE IS DESTRUCTIVE.\n REQUIRE REPAIR IN ADVANCE";
+        if(timeMakeLandFall < timeEvac)
+        {
+            cout<<"NEEDS TO EVACUATE THE SYSTEM ASAP\n";
+            int totalCapacityCityCanHold = runTo.capacity;
+            if(populationCity > totalCapacityCityCanHold)
+            {
+                cout<<"City "<<runTo.name<<" shelter capacity is compromised.\n List of nearby cities that people can evacuate too. ";
+                vector <CityPR> adjCity = connectTo(to);
+                for(CityPR city : adjCity)
+                {
+                    cout<<"Name: "<<city.name<<"Total capacity: "<<city.capacity<<endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        cout<<"NO NEED FOR EVACUATION\n";
+    }
 
 }
 
@@ -531,18 +571,17 @@ int main()
     //Testing the function neighboring CIty
     g.neighboringCity("a");
     //Testing the function connectTo
-    vector<City> test = g.connectTo("f");
-    for(City test1: test)
+    vector<CityPR> test = g.connectTo("f");
+    for(CityPR test1: test)
     {
         cout<< test1.name<<endl;
     }
     //Testing retrieving a city from a network
-    City a = g.getCity("a");
+    CityPR a = g.getCity("a");
     cout<<a.population;
     cout<<endl;
     //g.printAllEdges();
     return 0;
 
 }
-
 */
