@@ -21,21 +21,36 @@ struct Road
 };
 
 // Represent a City
-struct City
+class City
 {
+public:
     int h, e_flow;
     int population;
     int numShelter;
     int shelterCapacity;
     int capacity;
-    City(int h, int e_flow, int _population)
+    string name;
+    City(int h, int e_flow)
     {
-        this->population = _population;
         this->h = h;
         this->e_flow = e_flow;
     }
-    City(int h, int e_flow, int _population, int _numShelter, int _shelterCapacity)
+    City(int h, int e_flow, string name)
     {
+        this->name = name;
+        this->h = h;
+        this->e_flow = e_flow;
+    }
+    /* City(int h, int e_flow, int _population, string name)
+     {
+         this->population = _population;
+         this->h = h;
+         this->e_flow = e_flow;
+         this->name = name;
+     }*/
+    City(int h, int e_flow, int _population, int _numShelter, int _shelterCapacity, string nameCity)
+    {
+        this->name = nameCity;
         this->shelterCapacity = _shelterCapacity;
         this->numShelter = _numShelter;
         this->population = _population;
@@ -43,8 +58,6 @@ struct City
         this->h = h;
         this->e_flow = e_flow;
     }
-
-
 };
 
 // To represent a flow network
@@ -97,7 +110,7 @@ class Graph
 
     int V;    // No. of city
     // Map the city to integer
-    vector<string>cityName; ;
+    vector<string>cityName;
     vector<City> city;
     vector<Road> road;
     // Function to push excess flow from from
@@ -114,6 +127,7 @@ public:
 
     Graph(int V);  // Constructor
     int matchingCity(string cityName);
+    City getCity(string nameCity);
     //void pairingCityWithNumber();
     // function to add an road to graph
     void addRoad(string from, string to, int w);
@@ -123,10 +137,12 @@ public:
     void neighboringCity (string name);
     void printTheMaximumFlow(string from, string to);
     //Intialize the city with population
-    void initializeCity (int population, int numShelter, int shelterCapacity);
+    void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
     float timeTakeToEvac(Hurricane hurricane, City city, string from, string to);
+    // Get the info of nearby cities that has a way to go over
     void decisionMaking (float timeEvac, City city, Hurricane hurricane);
+
 };
 
 int Graph::matchingCity(string name)
@@ -146,11 +162,7 @@ int Graph::matchingCity(string name)
 Graph::Graph(int V)
 {
     this->V = V;
-    // all vertices are initialized with 0 height and 0 excess flow
-  //  for (int i = 0; i < V; i++)
-   // {
-    //    city.push_back(City(0, 0));
-    //}
+    // all cities are initialized with 0 height and 0 excess flow
 }
 
 void Graph::addRoad(string u, string v, int capacity)
@@ -158,25 +170,24 @@ void Graph::addRoad(string u, string v, int capacity)
     // flow is initialized with 0 for all road
     road.push_back(Road(0, capacity, u, v));
 
-        if(cityName.empty())
+    if(cityName.empty())
+    {
+        cityName.push_back(u);
+        cityName.push_back(v);
+    }
+    else
+    {
+        auto it = find(cityName.begin(), cityName.end(), u);
+        if(it == cityName.end())
         {
             cityName.push_back(u);
+        }
+        auto it2 = find(cityName.begin(), cityName.end(), v);
+        if(it2 == cityName.end())
+        {
             cityName.push_back(v);
         }
-        else
-        {
-            auto it = find(cityName.begin(), cityName.end(), u);
-            if(it == cityName.end())
-            {
-                cityName.push_back(u);
-            }
-            auto it2 = find(cityName.begin(), cityName.end(), v);
-            if(it2 == cityName.end())
-            {
-                cityName.push_back(v);
-            }
-        }
-
+    }
 }
 
 void Graph::preflow(string source)
@@ -236,7 +247,6 @@ void Graph::updateReverseEdgeFlow(int i, int flow)
             return;
         }
     }
-
     // adding reverse Edge in residual graph
     Road e = Road(0, flow, road[i].to, road[i].from);
     road.push_back(e);
@@ -351,8 +361,8 @@ void Graph::neighboringCity(string name) {
 
 }
 
-void Graph::initializeCity(int population, int numShelter, int shelterCapacity) {
-    City(0,0, population, numShelter, shelterCapacity);
+void Graph::initializeCity(string cityName, int population, int numShelter, int shelterCapacity) {
+    city.push_back(City(0,0, population, numShelter, shelterCapacity, cityName));
 }
 
 void Graph::printTheMaximumFlow(string from, string to)
@@ -363,7 +373,8 @@ void Graph::printTheMaximumFlow(string from, string to)
     //cout<< "The maximum number of people can stay in the city is "<< numPeopleCanStayInCity<<endl;
 }
 
-Graph::Hurricane Graph::createHurricane() {
+Graph::Hurricane Graph::createHurricane()
+{
     srand(time(NULL));
     int randomSpeed = rand() % 200 + 89;
     int distance  = rand()% 483 + 241;
@@ -372,30 +383,45 @@ Graph::Hurricane Graph::createHurricane() {
 
 float Graph::timeTakeToEvac(Graph::Hurricane hurricane, City city, string from, string to) {
     int population = city.population; // get the city population
-    int numberPeopleEvacPerHour = getMaxFlow(from, to);
+    int numberPeopleEvacPerHour = getMaxFlow(from, to); //
     int timeLandFall = hurricane.timeToMakeLandFall();
     float timeToTakePeopleEvac = float(population)/numberPeopleEvacPerHour;
     return timeToTakePeopleEvac;
 }
 
 void Graph::decisionMaking(float timeEvac, City city, Hurricane hurricane) {
-    
+
+}
+
+City Graph::getCity(string nameCity) {
+    for(auto it = city.begin(); it != city.end(); it++)
+    {
+        if (it->name == nameCity) {
+            return *it;
+        }
+    }
+    return City(0,0);
 }
 
 // Driver program to test above functions
+/*
 int main()
 {
-
-    int V = 6;
+    int numCity = 6;
     int population, numShelter, shelterCapacity;
-    Graph g(V);
-    for(int i = 0; i< V; i++)
+    string nameCity;
+    Graph g(numCity);
+
+    for(int i = 0; i< numCity; i++)
     {
+        cin>>nameCity;
         cin>>population;
         cin>>numShelter;
         cin>>shelterCapacity;
-        g.initializeCity(population, numShelter, shelterCapacity);
+        //g.initializeCity(nameCity, population, numShelter, shelterCapacity);
+        g.initializeCity(nameCity, population, numShelter, shelterCapacity);
     }
+
     // Creating above shown flow network
     g.addRoad("a", "b", 16);
     g.addRoad("a", "c", 13);
@@ -407,13 +433,15 @@ int main()
     g.addRoad("d", "f", 20);
     g.addRoad("e", "d", 7);
     g.addRoad("e", "f", 4);
-
     // Initialize source and sink
     string s = "a", t = "f";
     cout << "Maximum flow is " << g.getMaxFlow(s,t);
     cout<<endl;
     g.neighboringCity("a");
+    City a = g.getCity("a");
+    cout<<a.population;
     cout<<endl;
     //g.printAllEdges();
     return 0;
 }
+*/
