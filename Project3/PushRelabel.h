@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include"Graph.h"
+#include"City.h"
 using namespace std;
 // Global function
 // Initializing a road network including city
@@ -23,7 +25,7 @@ struct Road
 };
 
 // Represent a City
-class City
+class CityPR
 {
 public:
     int h, e_flow;
@@ -32,12 +34,12 @@ public:
     int shelterCapacity;
     int capacity;
     string name;
-    City(int h, int e_flow)
+    CityPR(int h, int e_flow)
     {
         this->h = h;
         this->e_flow = e_flow;
     }
-    City(int h, int e_flow, string name)
+    CityPR(int h, int e_flow, string name)
     {
         this->name = name;
         this->h = h;
@@ -50,7 +52,7 @@ public:
          this->e_flow = e_flow;
          this->name = name;
      }*/
-    City(int h, int e_flow, int _population, int _numShelter, int _shelterCapacity, string nameCity)
+    CityPR(int h, int e_flow, int _population, int _numShelter, int _shelterCapacity, string nameCity)
     {
         this->name = nameCity;
         this->shelterCapacity = _shelterCapacity;
@@ -63,7 +65,7 @@ public:
 };
 
 // To represent a flow network
-class Graph
+class NetworkPR
 {
     //Nested class to get hurricane
     class Hurricane
@@ -113,8 +115,8 @@ class Graph
     int V;    // No. of city
     // Map the city to integer
     vector<string>cityName;
-    vector<City> city;
-    vector<City> cityCopy; // This vector is used to copy all the city to a new graph
+    vector<CityPR> city;
+    vector<CityPR> cityCopy; // This vector is used to copy all the city to a new graph
     vector<Road> road; // This vector is used to store all the edges to implement push and relabel algorithm
     vector<Road> roadNetwork; //This vector is used to store the road network to perform finding city
     // Function to push excess flow from from
@@ -129,37 +131,39 @@ class Graph
     Hurricane createHurricane();
 public:
 
-    Graph(int V);  // Constructor
-    Graph(const Graph& rhs); // Copy constructor
-    Graph& operator=(const Graph& rhs); // copy assignment operator
-    ~Graph();
+    NetworkPR(int V);  // Constructor
+    NetworkPR (map<string, City*>* roadNetWork, string source, string sink);
+    NetworkPR(const NetworkPR& rhs); // Copy constructor
+    NetworkPR& operator=(const NetworkPR& rhs); // copy assignment operator
+    ~NetworkPR();
     int matchingCity(string cityName);
-    City getCity(string nameCity);
+    CityPR getCity(string nameCity);
     //void pairingCityWithNumber();
     // function to add an road to graph
     void addRoad(string from, string to, int w);
     // returns maximum flow from s to t
     int getMaxFlow(string from, string to);
-    string overFlowVertex(vector<City>& ver, string source, string to);
+    string overFlowVertex(vector<CityPR>& ver, string source, string to);
     void neighboringCity (string name);
     void printTheMaximumFlow(string from, string to);
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
-    float timeTakeToEvac(Hurricane hurricane, City city, string from, string to);
+    float timeTakeToEvac(Hurricane hurricane, CityPR city, string from, string to);
     //Get the list of cities that the current city connect to
-    vector <City> connectTo (string name);
+    vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
     void decisionMaking (float timeEvac, City city, Hurricane hurricane);
 
 };
-Graph::Graph(int V)
+NetworkPR::NetworkPR(int V)
 {
     this->V = V;
     // all cities are initialized with 0 height and 0 excess flow
 }
 
-int Graph::matchingCity(string name)
+
+int NetworkPR::matchingCity(string name)
 {
     auto it = find(cityName.begin(), cityName.end(), name);
     if(it != cityName.end())
@@ -175,7 +179,7 @@ int Graph::matchingCity(string name)
 
 
 
-void Graph::addRoad(string u, string v, int capacity)
+void NetworkPR::addRoad(string u, string v, int capacity)
 {
     // flow is initialized with 0 for all road
     road.push_back(Road(0, capacity, u, v));
@@ -200,7 +204,7 @@ void Graph::addRoad(string u, string v, int capacity)
     }
 }
 
-void Graph::preflow(string source)
+void NetworkPR::preflow(string source)
 {
     // Making h of source City equal to no. of vertices
     // Height of other vertices is 0.
@@ -228,7 +232,7 @@ void Graph::preflow(string source)
 }
 
 // returns index of overflowing City
-string Graph::overFlowVertex(vector<City>& ver, string s, string t)
+string NetworkPR::overFlowVertex(vector<CityPR>& ver, string s, string t)
 {
     for(int i = 0; i < ver.size(); i++)
     {
@@ -244,7 +248,7 @@ string Graph::overFlowVertex(vector<City>& ver, string s, string t)
 }
 
 // Update reverse flow for flow added on ith Edge
-void Graph::updateReverseEdgeFlow(int i, int flow)
+void NetworkPR::updateReverseEdgeFlow(int i, int flow)
 {
     int u = matchingCity(road[i].to);
     int v = matchingCity(road[i].from);
@@ -263,7 +267,7 @@ void Graph::updateReverseEdgeFlow(int i, int flow)
 }
 
 // To push flow from overflowing vertex from
-bool Graph::push(string u)
+bool NetworkPR::push(string u)
 {
     // Traverse through all edges to find an adjacent (of from)
     // to which flow can be pushed
@@ -300,7 +304,7 @@ bool Graph::push(string u)
 }
 
 // function to relabel vertex from
-void Graph::relabel(string u)
+void NetworkPR::relabel(string u)
 {
     // Initialize minimum height of an adjacent
     int minHeight = INT_MAX;
@@ -327,7 +331,7 @@ void Graph::relabel(string u)
 }
 
 // main function for printing maximum flow of graph
-int Graph::getMaxFlow(string s, string t)
+int NetworkPR::getMaxFlow(string s, string t)
 {
     preflow(s);
 
@@ -346,7 +350,7 @@ int Graph::getMaxFlow(string s, string t)
     return city[matchingCity(t)].e_flow;
 }
 
-void Graph::neighboringCity(string name) {
+void NetworkPR::neighboringCity(string name) {
 
     for(int i = 0; i< road.size(); i++)
     {
@@ -369,12 +373,12 @@ void Graph::neighboringCity(string name) {
 
 }
 
-void Graph::initializeCity(string cityName, int population, int numShelter, int shelterCapacity) {
-    city.push_back(City(0,0, population, numShelter, shelterCapacity, cityName));
+void NetworkPR::initializeCity(string cityName, int population, int numShelter, int shelterCapacity) {
+    city.push_back(CityPR(0,0, population, numShelter, shelterCapacity, cityName));
     cityCopy = city;
 }
 
-void Graph::printTheMaximumFlow(string from, string to)
+void NetworkPR::printTheMaximumFlow(string from, string to)
 {
     int rate = getMaxFlow(from,to);
     cout<< "The maximum people that people can evacuate to city  "<< to << " from"<< " is: " << rate<< "/hour";
@@ -382,7 +386,7 @@ void Graph::printTheMaximumFlow(string from, string to)
     //cout<< "The maximum number of people can stay in the city is "<< numPeopleCanStayInCity<<endl;
 }
 
-Graph::Hurricane Graph::createHurricane()
+NetworkPR::Hurricane NetworkPR::createHurricane()
 {
     srand(time(NULL));
     int randomSpeed = rand() % 200 + 89;
@@ -390,7 +394,7 @@ Graph::Hurricane Graph::createHurricane()
     return Hurricane(randomSpeed, distance);
 }
 
-float Graph::timeTakeToEvac(Graph::Hurricane hurricane, City city, string from, string to) {
+float NetworkPR::timeTakeToEvac(NetworkPR::Hurricane hurricane, CityPR city, string from, string to) {
     int population = city.population; // get the city population
     int numberPeopleEvacPerHour = getMaxFlow(from, to); //
     int timeLandFall = hurricane.timeToMakeLandFall();
@@ -398,22 +402,22 @@ float Graph::timeTakeToEvac(Graph::Hurricane hurricane, City city, string from, 
     return timeToTakePeopleEvac;
 }
 
-void Graph::decisionMaking(float timeEvac, City city, Hurricane hurricane) {
+void NetworkPR::decisionMaking(float timeEvac, City city, Hurricane hurricane) {
 
 }
 
-City Graph::getCity(string nameCity) {
+CityPR NetworkPR::getCity(string nameCity) {
     for(auto it = city.begin(); it != city.end(); it++)
     {
         if (it->name == nameCity) {
             return *it;
         }
     }
-    return City(0,0);
+    return CityPR(0,0);
 }
 
-vector<City> Graph::connectTo(string name) {
-    vector<City>connect;
+vector<CityPR> NetworkPR::connectTo(string name) {
+    vector<CityPR>connect;
     for(int i = 0; i< road.size(); i++)
     {
         //City that connect to city
@@ -431,7 +435,7 @@ vector<City> Graph::connectTo(string name) {
     return connect;
 }
 
-Graph::Graph(const Graph &rhs) {
+NetworkPR::NetworkPR(const NetworkPR &rhs) {
     V = rhs.V;
     cityName = rhs.cityName;
     city = rhs.cityCopy;
@@ -439,7 +443,7 @@ Graph::Graph(const Graph &rhs) {
     roadNetwork = rhs.roadNetwork;
 
 }
-Graph& Graph::operator=(const Graph &rhs) {
+NetworkPR& NetworkPR::operator=(const NetworkPR &rhs) {
     V = rhs.V;
     cityName = rhs.cityName;
     city = rhs.cityCopy;
@@ -448,13 +452,19 @@ Graph& Graph::operator=(const Graph &rhs) {
     return *this;
 }
 
-Graph::~Graph()
+NetworkPR::~NetworkPR()
 {
     V = 0;
     cityName.clear();
     city.clear();
     road.clear();
     roadNetwork.clear();
+}
+
+NetworkPR::NetworkPR(map<string, City *> *roadNetWork, string source, string sink) {
+    string from = source;
+    string to = sink;
+
 }
 
 // Driver program to test above functions
@@ -464,7 +474,7 @@ int main()
     int numCity = 6;
     int population, numShelter, shelterCapacity;
     string nameCity;
-    Graph g(numCity);
+    NetworkPR g(numCity);
 
     for(int i = 0; i< numCity; i++)
     {
@@ -496,7 +506,7 @@ int main()
     //Testing max flow in reverse directiom
     string s2 = "e", t2 = "f";
     cout<<"Hello"<<endl;
-    Graph g2(6);
+    NetworkPR g2(6);
     g2 = g;
     cout<< "Maximum flow of reverse edge e to f "<<g2.getMaxFlow(s2, t2)<<endl;
     // Result can't do so -> will create an infinite loop when do the reverse. Need to create a new networm
