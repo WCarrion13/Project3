@@ -1,3 +1,5 @@
+//Main
+#pragma  once
 #include <iostream>
 #include "DataGenerator.h"
 #include "Reader.h"
@@ -31,10 +33,13 @@ int main(int argc, const char * argv[]) {
     cout << endl;
 
     cout << "Max flow is: " << var << endl;
-
+    cout<<"hello\n";
     NetworkPR pushRelabel = NetworkPR(*cities);
 
     pushRelabel.printTheMaximumFlow(source, sink);
-
+    // Create a hurricane
+    Hurricane Irma = pushRelabel.createHurricane();
+    float totalTimeToEvac = pushRelabel.timeTakeToEvac(Irma, source, sink);
+    pushRelabel.decisionMaking(totalTimeToEvac, source, sink, Irma);
     return 0;
 }

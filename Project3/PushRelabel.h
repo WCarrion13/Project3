@@ -8,7 +8,61 @@
 using namespace std;
 // Global function
 // Initializing a road network including city
+class Hurricane
+{
+    int speed;          // kilometer/hr
+    int distance;       // in kilometer
+    string category;
 
+public:
+    Hurricane(int speed, int distance)
+    {
+        this->speed = speed;
+        this->distance = distance;
+        if(speed >= 119 && speed <= 153)
+        {
+            this->category = "Category 1";
+        }
+        else if(speed >= 154 && speed <= 177)
+        {
+            this->category = "Category 2";
+        }
+        else if(speed >= 178 && speed <= 208 )
+        {
+            this->category = "Category 3";
+        }
+        else if(speed >= 209 && speed <= 251)
+        {
+            this->category = "Category 4";
+        }
+        else if(speed >= 252)
+        {
+            this->category = "Category 5";
+        }
+        else if (speed >= 89 && speed <= 119 )
+        {
+            this->category = "Tropical storm";
+        }
+
+    }
+    int getSpeed()
+    {
+        return speed;
+    }
+    int getDistance()
+    {
+        return distance;
+    }
+    string getTheCategory()
+    {
+        return category;
+    }
+    int timeToMakeLandFall()
+    {
+        return distance/speed; // in hour
+    }
+
+};
 struct Road
 {
     // To store current flow and capacity of road
@@ -67,51 +121,6 @@ public:
 // To represent a flow network
 class NetworkPR
 {
-    //Nested class to get hurricane
-    class Hurricane
-    {
-        int speed;          // kilometer/hr
-        int distance;       // in kilometer
-        string category;
-
-    public:
-        Hurricane(int speed, int distance)
-        {
-            this->speed = speed;
-            this->distance = distance;
-            if(speed >= 119 && speed <= 153)
-            {
-                this->category = "Category 1";
-            }
-            else if(speed >= 154 && speed <= 177)
-            {
-                this->category = "Category 2";
-            }
-            else if(speed >= 178 && speed <= 208 )
-            {
-                this->category = "Category 3";
-            }
-            else if(speed >= 209 && speed <= 251)
-            {
-                this->category = "Category 4";
-            }
-            else if(speed >= 252)
-            {
-                this->category = "Category 5";
-            }
-            else if (speed >= 89 && speed <= 119 )
-            {
-                this->category = "Tropical storm";
-            }
-
-        }
-        int timeToMakeLandFall()
-        {
-            return distance/speed; // in hour
-        }
-
-    };
-
     string source; //Source city
     string sink; //Destination city;
     int V = 0;    // No. of city
@@ -130,11 +139,11 @@ class NetworkPR
     // Function to reverse road
     void updateReverseEdgeFlow(int i, int flow);
     //Hurrican generator
-    Hurricane createHurricane();
-public:
 
+public:
+    Hurricane createHurricane();
     NetworkPR(int V);  // Constructor
-    NetworkPR (map<string, City*>& roadNetWork);
+    NetworkPR (map<string, City*>& roadNetWork); //Construct a new Network
     NetworkPR(const NetworkPR& rhs); // Copy constructor
     NetworkPR& operator=(const NetworkPR& rhs); // copy assignment operator
     ~NetworkPR();
@@ -151,11 +160,11 @@ public:
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
-    float timeTakeToEvac(Hurricane hurricane, CityPR city, string from, string to);
+    float timeTakeToEvac(Hurricane hurricane, string from, string to);
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
-    void decisionMaking (float timeEvac, City city, Hurricane hurricane);
+    void decisionMaking (float timeEvac, string from, string to, Hurricane hurricane);
 
 };
 NetworkPR::NetworkPR(int V)
@@ -384,11 +393,9 @@ void NetworkPR::printTheMaximumFlow(string from, string to)
 {
     int rate = getMaxFlow(from,to);
     cout << "The maximum amount of people that can evacuate to "<< to << " from" << from << " is: " << rate << "/hour" << endl;
-    //int numPeopleCanStayInCity = city[matchingCity(from)].capacity;
-    //cout<< "The maximum number of people can stay in the city is "<< numPeopleCanStayInCity<<endl;
 }
 
-NetworkPR::Hurricane NetworkPR::createHurricane()
+Hurricane NetworkPR::createHurricane()
 {
     srand(time(NULL));
     int randomSpeed = rand() % 200 + 89;
@@ -396,15 +403,51 @@ NetworkPR::Hurricane NetworkPR::createHurricane()
     return Hurricane(randomSpeed, distance);
 }
 
-float NetworkPR::timeTakeToEvac(NetworkPR::Hurricane hurricane, CityPR city, string from, string to) {
-    int population = city.population; // get the city population
+float NetworkPR::timeTakeToEvac(Hurricane hurricane, string from, string to) {
+    CityPR runAway = getCity(from);
+    int population = runAway.population;
     int numberPeopleEvacPerHour = getMaxFlow(from, to); //
-    int timeLandFall = hurricane.timeToMakeLandFall();
-    float timeToTakePeopleEvac = float(population)/numberPeopleEvacPerHour;
-    return timeToTakePeopleEvac;
+    float totalTimeTakeToEvac = float(population)/numberPeopleEvacPerHour;
+    return totalTimeTakeToEvac;
 }
 
-void NetworkPR::decisionMaking(float timeEvac, City city, Hurricane hurricane) {
+void NetworkPR::decisionMaking(float timeEvac, string from, string to, Hurricane hurricane) {
+    CityPR runAway = getCity(from);
+    CityPR runTo = getCity(to);
+    int populationCity = runAway.population;
+    int timeMakeLandFall = hurricane.timeToMakeLandFall();
+    cout<<"The hurricane speed is "<< hurricane.getSpeed()<<endl;
+    cout<<"It falls into "<< hurricane.getTheCategory()<<endl;
+    if(hurricane.getTheCategory() == "Category 5" || hurricane.getTheCategory() == "Category 4" || hurricane.getTheCategory() == "Category 3" )
+    {
+        cout<<"DANGER: THE HURRICANE IS DESTRUCTIVE.\nREQUIRE REPAIR IN ADVANCE";
+        if(timeMakeLandFall < timeEvac)
+        {
+            cout<<"NEEDS TO EVACUATE THE SYSTEM ASAP\n";
+            int totalCapacityCityCanHold = runTo.capacity;
+            cout<<"The capacity that "<< runTo.name<< " can hold is "<< totalCapacityCityCanHold<<endl;
+            int leftOut = populationCity - totalCapacityCityCanHold;
+            cout<<"Number of people will be left out is "<< leftOut<<endl;
+            if(populationCity > totalCapacityCityCanHold)
+            {
+                vector <CityPR> adjCity = connectTo(to);
+                cout<<"City "<<runTo.name<<" shelter capacity is compromised.\nList of nearby cities that people can evacuate.\n";
+                for(CityPR city : adjCity)
+                {
+                    if(city.capacity==0)
+                    {
+                        cout << city.name << " doesn't have a shelter. Avoid at all cost";
+                        continue;
+                    }
+                    cout<<"Name: "<<city.name<<"Total capacity: "<<city.capacity<<endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        cout<<"NO NEED FOR EVACUATION\nJUST DON'T BE A FLORIDA MAN";
+    }
 
 }
 
@@ -467,82 +510,18 @@ NetworkPR::NetworkPR(map<string, City *>& roadNetWork) {
 
     for (auto it = roadNetWork.begin(); it != roadNetWork.end(); it++) {
         City* currentCity = it->second;
-        CityPR cityInfo = CityPR(0, 0, currentCity->GetPopulation(), (int) currentCity->GetShelters().size(), 1000, it->first);
+        //CityPR cityInfo = CityPR(0, 0, currentCity->GetPopulation(), (int) currentCity->GetShelters().size(), 1000, it->first);
+        initializeCity(it->first, currentCity->GetPopulation(),(int)currentCity->GetShelters().size(), 10000 );
         V++;
-        cityName.push_back(currentCity->GetName());
-        city.push_back(cityInfo);
-
+        //cityName.push_back(currentCity->GetName());
+        //city.push_back(cityInfo);
         map<string, int>* adjCities =  currentCity->GetAdjCities();
         for (auto it2 = (*adjCities).begin(); it2 != (*adjCities).end(); it2++) {
-            Road currentRoad = Road(0, it2->second, it->first, it2->first);
-            road.push_back(currentRoad);
+            addRoad(it->first,it2->first,it2->second);
+            //Road currentRoad = Road(0, it2->second, it->first, it2->first);
+            //road.push_back(currentRoad);
         }
-
     }
 
 }
 
-// Driver program to test above functions
-/*
-int main()
-{
-    int numCity = 6;
-    int population, numShelter, shelterCapacity;
-    string nameCity;
-    NetworkPR g(numCity);
-
-    for(int i = 0; i< numCity; i++)
-    {
-        cin>>nameCity;
-        cin>>population;
-        cin>>numShelter;
-        cin>>shelterCapacity;
-        //g.initializeCity(nameCity, population, numShelter, shelterCapacity);
-        g.initializeCity(nameCity, population, numShelter, shelterCapacity);
-    }
-
-    // Creating above shown flow network
-    g.addRoad("a", "b", 16);
-    g.addRoad("a", "c", 13);
-    g.addRoad("b", "c", 10);
-    g.addRoad("c", "b", 4);
-    g.addRoad("b", "d", 12);
-    g.addRoad("c", "e", 14);
-    g.addRoad("d", "c", 9);
-    g.addRoad("d", "f", 20);
-    g.addRoad("e", "d", 7);
-    g.addRoad("e", "f", 4);
-    // Initialize source and sink
-    string s = "e", t = "f";
-    //Teting the maximum flow function
-    cout << "Maximum flow is " << g.getMaxFlow(s,t);
-    cout<<endl;
-
-    //Testing max flow in reverse directiom
-    string s2 = "e", t2 = "f";
-    cout<<"Hello"<<endl;
-    NetworkPR g2(6);
-    g2 = g;
-    cout<< "Maximum flow of reverse edge e to f "<<g2.getMaxFlow(s2, t2)<<endl;
-    // Result can't do so -> will create an infinite loop when do the reverse. Need to create a new networm
-    // To find another maximum flow
-
-
-    //Testing the function neighboring CIty
-    g.neighboringCity("a");
-    //Testing the function connectTo
-    vector<City> test = g.connectTo("f");
-    for(City test1: test)
-    {
-        cout<< test1.name<<endl;
-    }
-    //Testing retrieving a city from a network
-    City a = g.getCity("a");
-    cout<<a.population;
-    cout<<endl;
-    //g.printAllEdges();
-    return 0;
-
-}
-
-*/
