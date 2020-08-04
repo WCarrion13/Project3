@@ -29,7 +29,6 @@ private:
     };
 
     map<string, vector<Edge> > originalGraph;
-    map<string, vector<Edge> > residualGraph;
     string source;
     string destination;
 
@@ -49,10 +48,29 @@ public:
             }
             originalGraph[it->first] = edges;
         }
-
-        //Create the residual graph exactly the same as Original
-        residualGraph = originalGraph;
     }
+
+    FordFulkerson(map<string, City*>& roadNetwork, string source, string destination) {
+        //Declare out source and destination nodes;
+        this->source = source;
+        this->destination = destination;
+
+        for (auto it = roadNetwork.begin(); it != roadNetwork.end(); it++) {
+            vector<Edge> edges;
+            City* currentCity = it->second;
+            map<string, int>* adjCities = currentCity->GetAdjCities();
+
+            for (auto it2 = (*adjCities).begin(); it2 != (*adjCities).end(); it2++) {
+                Edge edge(0, it2->first, it2->second);
+
+                edges.push_back(edge);
+            }
+            originalGraph[it->first] = edges;
+        }
+
+    }
+
+
     map<string, pair<string, int> > BFS() {
         //Storing the path we took from source to dest node. Organized as map<string to, string from>.
         map<string, pair<string, int> > path;
@@ -121,6 +139,8 @@ public:
             parentIndex = path[childCity].second;
             }
 
+
+
         }
 
         childCity = destination;
@@ -174,7 +194,7 @@ public:
             cout << it->first << ": ";
             for (int i = 0; i < it->second.size(); i++) {
                 cout << it->second.at(i).to << ", flow: " << it->second.at(i).flow;
-                cout << ", capacity: " <<it->second.at(i).remainingCap << endl;
+                cout << ", remaining capacity: " <<it->second.at(i).remainingCap << endl;
             }
         }
     }
