@@ -10,5 +10,5 @@ namespace rnd {
 	static char GetNum() { return numbers[GetRandInt(0, 9)]; }
 	static char GetLC() { return lettersLC[GetRandInt(0, 25)]; }
 	static char GetUC() { return lettersUC[GetRandInt(0, 25)]; }
-	static bool GetTF(int chance) { return (GetRandInt(1, chance) == 1) ? true : false; }	//Returns a T/F value based on 1/input
+	static bool GetTF(int chance) { return (GetRandInt(1, chance) == 1) ? true : false; }	//Returns a T value with a 1/input chance
 };

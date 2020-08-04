@@ -20,7 +20,7 @@ bool Graph::IsEdge(string from, string to) {
 	return false;
 }
 
-set<string> Graph::getAdjacent(string from) {
+set<string> Graph::GetAdjCities(string from) {
 	set<string> adj;
 	for (auto iter = graph->begin(); iter != graph->end(); iter++)
 		for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++)
