@@ -44,5 +44,8 @@
     <ClInclude Include="Randomizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FordFulkerson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

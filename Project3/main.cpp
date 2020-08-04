@@ -16,7 +16,7 @@ int main() {
 	Graph* graph = reader.GetGraph();
 	map<string, City*>* cities = reader.GetCityList();
 	string source = reader.GetRandomCity();
-	string sink = reader.GetRandomCity();
+	string sink = reader.GetRandomCity(source);
 
 	//Rest of algorithms here//
 

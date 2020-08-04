@@ -17,15 +17,17 @@ public:
 	}
 	
 	//Accessors
-	Graph* GetGraph() { return graph; }
-	map<string, City*>* GetCityList() { return cityList; }
-	string GetRandomCity();
+	Graph* GetGraph() { return graph; }		//Return the graph describing the connections between cities
+	map<string, City*>* GetCityList() { return cityList; }	//Return a list of every city and its object
+	string GetRandomCity();	//Find random city in graph
+	string GetRandomCity(string exclude);	//Find random city in graph, excluding input
+	string GetRandomCity(vector<string> exclude);	//Find random city in graph, excluding input
 
-	//Mutators
-	void AddCities();
+	//Mutators	
+	void AddAdjCities();		//Add adj city map to each city for easy access
 
 	//Utility
-	void ReadCSV(string filename);
+	void ReadCSV(string filename);	//Read all data from CSV file into data structures
 
 };
 
