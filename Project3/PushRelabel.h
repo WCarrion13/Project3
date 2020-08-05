@@ -379,7 +379,7 @@ void NetworkPR::initializeCity(string cityName, int population, int numShelter, 
 void NetworkPR::printTheMaximumFlow(string from, string to)
 {
     int rate = getMaxFlow(from, to);
-    cout << "Up to " << rate << " per hour can evacuate from " << from <<" to " << to << endl;
+    cout << "Up to " << rate << " people per hour can evacuate from " << from <<" to " << to << endl;
 }
 
 Hurricane NetworkPR::createHurricane()
@@ -407,37 +407,46 @@ void NetworkPR::decisionMaking(string from, string to) {
     int populationCity = runAway.population;
     float totalTimeTakeToEvac = float(populationCity)/numPeopleEvacPerHour;
     int timeMakeLandFall = hurricane.timeToMakeLandFall();
-    cout<<"The hurricane speed is "<< hurricane.getSpeed() << " per hour" <<endl;
+    cout<<"The hurricane's speed is "<< hurricane.getSpeed() << " per hour" <<endl;
     cout<<"It falls into "<< hurricane.getTheCategory()<<endl;
     if(hurricane.getTheCategory() == "Category 5" || hurricane.getTheCategory() == "Category 4" || hurricane.getTheCategory() == "Category 3" )
     {
-        cout<<"DANGER: THE HURRICANE IS DESTRUCTIVE.\nREQUIRE REPAIR IN ADVANCE";
+        cout << endl;
+        cout<<"DANGER: THE HURRICANE IS DESTRUCTIVE.\nPREPERATION AND EVACUATION REQUIRED IN ADVANCE" << endl;
         if(timeMakeLandFall < totalTimeTakeToEvac)
         {
-            cout<<"NEEDS TO EVACUATE THE SYSTEM ASAP\n";
-            int totalCapacityCityCanHold = runTo.capacity;
-            cout<<"The capacity that "<< runTo.name<< " can hold is "<< totalCapacityCityCanHold<<endl;
+            cout<<"HURRICANE WILL HIT BEFORE FULL EVACUATION\n";
+            int totalCapacityCityCanHold = runAway.capacity;
+            cout<<"Total shelter capacity of "<< runAway.name<< " is "<< totalCapacityCityCanHold<<endl;
             int leftOut = populationCity - totalCapacityCityCanHold;
-            cout<<"Number of people will be left out is "<< leftOut<<endl;
+            cout<< leftOut << " people will be left out of " << runAway.name << "'s shelters" << endl;
             if(populationCity > totalCapacityCityCanHold)
             {
+                cout << endl;
                 vector <CityPR> adjCity = connectTo(to);
-                cout<<"City "<<runTo.name<<" shelter capacity is compromised.\nList of nearby cities that people can evacuate.\n";
+                cout<< "The people of " << runAway.name << " are unprotected." << endl;
+                cout << "Producing list of nearby Cities and their shelter capacities" << endl;
                 for(CityPR city : adjCity)
                 {
                     if(city.capacity==0)
                     {
-                        cout << city.name << " doesn't have a shelter. Avoid at all cost";
+                        cout << "Name: " << city.name << endl;
+                        cout << "Total capacity: " << city.capacity;
+                        cout << " Doesn't have shelter. AVOID AT ALL COST!" << endl;
                         continue;
                     }
-                    cout<<"Name: "<<city.name<<"Total capacity: "<<city.capacity<<endl;
+                    cout << "Name: "<< city.name;
+                    cout << "Total capacity: " << city.capacity << endl;
                 }
+
             }
+            cout << endl;
         }
     }
     else
     {
-        cout<<"NO NEED FOR EVACUATION\nJUST DON'T BE A FLORIDA MAN";
+        cout<<"NO NEED FOR EVACUATION\nJUST DON'T BE A FLORIDA MAN" << endl;
+        cout << endl;
     }
 
 }

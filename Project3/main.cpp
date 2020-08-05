@@ -6,7 +6,10 @@
 #include "PushRelabel.h"
 
 int main(int argc, const char * argv[]) {
+    // insert code here...
+
     bool exit = false;
+
     int inputNum;
 
         cout << "Welcome to Natural Disaster's Project!" << endl;
@@ -48,7 +51,7 @@ int main(int argc, const char * argv[]) {
                 cout << "[1] Ford Fulkerson: " << endl;
                 cout << "[2] Push Relabel: " << endl;
                 cout << "[3] Both: " << endl;
-                cout << "[4] Go Back: " << endl;
+                cout << "[4] Main menu: " << endl;
 
                 //Take in user choice
                 cin >> inputNum;
@@ -133,14 +136,14 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for maximum roadCap
             while (!validInput) {
-            cout << "Enter the maximum possible road capacity in the road network (Valid: 1000 - 500000): " << endl;
+            cout << "Enter the maximum possible road capacity in the road network (Valid: 1 - 500000): " << endl;
             cin >> inputNum;
-                if (inputNum >= 1000 && inputNum <= 500000) {
+                if (inputNum >= minRoadCap && inputNum >= 1 && inputNum <= 500000) {
                     maxRoadCap = inputNum;
                     validInput = true;
                 }
                 else {
-                    cout << "Please enter valid input (Valid: 1000 - 500000): " << endl;
+                    cout << "Please enter valid input (Valid: 1 - 500000) and can't be smaller than minimum road capacity: " << endl;
                 }
 
             }
@@ -150,7 +153,7 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for minimum populationNum
             while (!validInput) {
-            cout << "Enter the minimum possible road capacity in the road network (Valid: 1 - 1000): " << endl;
+            cout << "Enter the minimum possible population for the cities (Valid: 1 - 1000): " << endl;
             cin >> inputNum;
                 if (inputNum >= 1 && inputNum <= 1000) {
                     minPopulation = inputNum;
@@ -167,14 +170,14 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for maximum populationNum
             while (!validInput) {
-            cout << "Enter the minimum possible road capacity in the road network (Valid: 1000 - 20000000): " << endl;
+            cout << "Enter the maximum possible population for the cities (Valid: 1 - 20000000): " << endl;
             cin >> inputNum;
-                if (inputNum >= 1000 && inputNum <= 20000000) {
+                if (inputNum >= minPopulation && inputNum >= 1 && inputNum <= 20000000) {
                     maxPopulation = inputNum;
                     validInput = true;
                 }
                 else {
-                    cout << "Please enter valid input (Valid: 1 - 20000000): " << endl;
+                    cout << "Please enter valid input (Valid: 1 - 20000000) and can't be smaller than minimum population: " << endl;
                 }
 
             }
@@ -204,7 +207,7 @@ int main(int argc, const char * argv[]) {
                 cout << "[1] Ford Fulkerson: " << endl;
                 cout << "[2] Push Relabel: " << endl;
                 cout << "[3] Both: " << endl;
-                cout << "[4] Go Back: " << endl;
+                cout << "[4] Main menu: " << endl;
 
                 //Take in user choice
                 cin >> inputNum;

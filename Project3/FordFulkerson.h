@@ -38,7 +38,7 @@ public:
         this->source = source;
         this->destination = destination;
 
-        //Recreate the original graph with flow added
+        //Recreate the original graph with flow added. Flow initialized to 0
         for (auto it = roadNetwork.Begin(); it != roadNetwork.End(); it++) {
             vector<Edge> edges;
             for (auto iter = it->second.begin(); iter != it->second.end(); iter++) {
@@ -51,10 +51,12 @@ public:
     }
 
     FordFulkerson(map<string, City*>& roadNetwork, string source, string destination) {
-        //Declare out source and destination nodes;
+        //Declare our source and destination nodes;
         this->source = source;
         this->destination = destination;
 
+        //This is a nested for loop that converts the data from map<string, City*> to map<string, vector<Edge>>
+        //So that algorithm can work with data provided
         for (auto it = roadNetwork.begin(); it != roadNetwork.end(); it++) {
             vector<Edge> edges;
             City* currentCity = it->second;
@@ -95,7 +97,7 @@ public:
                 visited[currentCity] = true;
 
                 vector<Edge> tempEdges = originalGraph[currentCity];
-                //cout << tempEdges.at(0).remainingCap << endl;
+
 
                 for (int i = 0; i < tempEdges.size(); i++) {
                     string to = tempEdges.at(i).to;
@@ -103,7 +105,7 @@ public:
 
                     if((remainCap > 0) && (visited.find(to) == visited.end())) {
                         que.push(to);
-                        path[to] = {currentCity, i};
+                        path[to] = make_pair(currentCity, i);
                     }
                 }
             }
@@ -114,7 +116,7 @@ public:
     }
 
     int UpdateGraph (map<string, pair<string, int> >& path) {
-        //New graph we will use
+        //New graph we will use to update rmaining capacities and flow of edges
         map<string, vector<Edge> > updatedGraph = originalGraph;
 
         int pathFlow = 0;
@@ -124,6 +126,7 @@ public:
         string parentCity = path[childCity].first;
         int parentIndex = path[childCity].second;
 
+        //Go through path and figure out what is the minimum remaining capacity.
         while(childCity != source) {
 
             Edge tempEdge = updatedGraph[parentCity].at(parentIndex);
@@ -139,14 +142,13 @@ public:
             parentIndex = path[childCity].second;
             }
 
-
-
         }
 
         childCity = destination;
         parentCity = path[childCity].first;
         parentIndex = path[childCity].second;
 
+        //Go through path and update all of the flows and remaining capacities of the edges until we get to source node
         while(childCity != source) {
             updatedGraph[parentCity].at(parentIndex).flow += minRemainCap;
             updatedGraph[parentCity].at(parentIndex).remainingCap -= minRemainCap;
@@ -160,20 +162,21 @@ public:
 
         }
 
+        //update our original graph
         originalGraph = updatedGraph;
 
         pathFlow = minRemainCap;
-
 
         return pathFlow;
     }
 
 
-    int maxFlow() {
+    int MaxFlow() {
         int maxFlow = 0;
         //Bool turns false once there are no more paths to dest node
         bool pathPossible = true;
 
+        //Continuing to update the maxFlow until there are no more paths to the destination node
         while (pathPossible) {
             map<string, pair<string, int>> path;
             path = BFS();
@@ -188,7 +191,12 @@ public:
         return maxFlow;
     }
 
+    void PrintMaxFlow() {
+        int var = MaxFlow();
+        cout << "Up to " << var << " people per hour can evacuate from " << source <<" to " << destination << endl;
+    }
 
+    //Meant to check out the graph to visualize it for debugging
     void PrintGraph() {
         for (auto it = originalGraph.begin(); it != originalGraph.end(); it++) {
             cout << it->first << ": ";
@@ -199,6 +207,7 @@ public:
         }
     }
 
+    //Meant to debug BFS algorithm
     void PrintBFS() {
         map<string,pair<string, int>> path = BFS();
 
