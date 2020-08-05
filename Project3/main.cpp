@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
             //Create hurricane and PR object
             NetworkPR pushRelabel = NetworkPR(*cities);
             // Create a hurricane
-            int rate = pushRelabel.getMaxFlow(source, sink);
+
             bool validInput = false;
 
             while (!validInput) {
@@ -60,25 +60,24 @@ int main(int argc, const char * argv[]) {
                     FF_Algo.PrintMaxFlow();
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink, rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 2) {
-                    pushRelabel.printTheMaximumFlow(source, sink,rate);
+                    pushRelabel.printTheMaximumFlow(source, sink);
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink, rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 3) {
                     FF_Algo.PrintMaxFlow();
-                    int rate = pushRelabel.getMaxFlow(source, sink);
-                    pushRelabel.printTheMaximumFlow(source, sink, rate);
+                    pushRelabel.printTheMaximumFlow(source, sink);
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink,rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
@@ -199,7 +198,7 @@ int main(int argc, const char * argv[]) {
             //Create hurricane and PR object
             NetworkPR pushRelabel = NetworkPR(*cities);
             // Create a hurricane
-            int rate = pushRelabel.getMaxFlow(source, sink);
+
             validInput = false;
 
             while (!validInput) {
@@ -217,24 +216,24 @@ int main(int argc, const char * argv[]) {
                     FF_Algo.PrintMaxFlow();
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink,rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 2) {
-                    pushRelabel.printTheMaximumFlow(source, sink, rate);
+                    pushRelabel.printTheMaximumFlow(source, sink);
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink, rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 3) {
                     FF_Algo.PrintMaxFlow();
-                    pushRelabel.printTheMaximumFlow(source, sink,rate);
+                    pushRelabel.printTheMaximumFlow(source, sink);
 
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink,rate);
+                    pushRelabel.decisionMaking(source, sink);
                     //Exit loop
                     validInput = true;
                 }
