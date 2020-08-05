@@ -353,12 +353,12 @@ int main(int argc, const char * argv[]) {
         else if (inputNum == 4) {
             if (hurrEnable == true) {
                 hurrEnable = false;
-                cout << "Turned Off hurricane senario!" << endl;
+                cout << "Turned Off hurricane scenario!" << endl;
                 cout << endl;
             }
             else {
                 hurrEnable = true;
-                cout << "Turned On hurricane senario!" << endl;
+                cout << "Turned On hurricane scenario!" << endl;
                 cout << endl;
             }
         }
