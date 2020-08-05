@@ -274,13 +274,6 @@ int main(int argc, const char * argv[]) {
 
         }
         else if (inputNum == 3) {
-            cout << "Choose whether you want to get max flow from FF, PR, or both: " << endl;
-            cout << "[1] Ford Fulkerson: " << endl;
-            cout << "[2] Push Relabel: " << endl;
-            cout << "[3] Both: " << endl;
-            cout << "[4] Main menu: " << endl;
-
-            cin >> inputNum;
 
             bool onlyFF = false;
             bool onlyPR = false;
@@ -289,6 +282,13 @@ int main(int argc, const char * argv[]) {
             bool validInput = false;
 
             while (!validInput) {
+                cout << "Choose whether you want to get max flow from FF, PR, or both: " << endl;
+                cout << "[1] Ford Fulkerson: " << endl;
+                cout << "[2] Push Relabel: " << endl;
+                cout << "[3] Both: " << endl;
+                cout << "[4] Main menu: " << endl;
+
+                cin >> inputNum;
 
                 if (inputNum == 1) {
                     onlyFF = true;
@@ -307,6 +307,7 @@ int main(int argc, const char * argv[]) {
                 }
                 else {
                     cout << "Invalid Input! Please Try Again" << endl;
+                    cout << endl;
                 }
             }
 
