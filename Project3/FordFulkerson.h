@@ -69,9 +69,7 @@ public:
             }
             originalGraph[it->first] = edges;
         }
-
     }
-
 
     map<string, pair<string, int> > BFS() {
         //Storing the path we took from source to dest node. Organized as map<string to, string from>.

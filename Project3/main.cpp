@@ -1,3 +1,4 @@
+
 //Main
 #include <iostream>
 #include "DataGenerator.h"
@@ -14,7 +15,7 @@ int main(int argc, const char * argv[]) {
 
     int inputNum;
 
-        cout << "Welcome to Natural Disaster's Project!" << endl;
+    cout << "Welcome to Natural Disaster's Project!" << endl;
     while (!exit) {
         cout << "Please enter one of the following options (e.g. 1): " << endl;
         cout << "[1] Generate random Road Network" << endl;
@@ -22,10 +23,28 @@ int main(int argc, const char * argv[]) {
         cout << "[3] Generate Max Flow of 10,000 Road Networks" << endl;
         cout << "[4] Toggle Hurricane output" << endl;
         cout << "[5] Exit program" << endl;
+        std::cin.exceptions(std::ios_base::failbit);
+        try
+        {
+            cin >> inputNum;
+            if(inputNum<=0 || inputNum >5)
+            {
+                throw out_of_range("Invalid input");
+            }
+        }
+        catch (const std::ios_base::failure &)
+        {
+            std::cout  << "Please enter numbers from 1 - 5 only!" << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        catch (const out_of_range)
+        {
+            std::cout << "Options contain 1 to 5 only. " << std::endl;
+        }
 
-        cin >> inputNum;
-
-        if (inputNum == 1) {
+        if (inputNum == 1)
+        {
             //Set up of random data to process
             int numCities = 100;
             DataGenerator gen(numCities);
@@ -57,7 +76,24 @@ int main(int argc, const char * argv[]) {
                 cout << endl;
 
                 //Take in user choice
-                cin >> inputNum;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >4)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 1 - 5 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "Options contain 1 to 4 only. " << std::endl;
+                }
 
                 if (inputNum == 1) {
                     FF_Algo.PrintMaxFlow();
@@ -118,8 +154,26 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for number of Cities
             while (!validInput) {
-            cout << "Enter the number of cities in the road network (Valid: 5 - 200): " << endl;
-            cin >> inputNum;
+                cout << "Enter the number of cities in the road network (Valid: 5 - 200): " << endl;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >200)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 5 - 200 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "The minimum population of a city is from 5 to 200  " << std::endl;
+                }
+
                 if (inputNum >= 5 && inputNum <= 200) {
                     numCities = inputNum;
                     validInput = true;
@@ -134,8 +188,26 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for minimum roadCap
             while (!validInput) {
-            cout << "Enter the minimum possible road capacity in the road network (Valid: 1 - 1000): " << endl;
-            cin >> inputNum;
+                cout << "Enter the minimum possible road capacity in the road network (Valid: 1 - 1000): " << endl;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >1000)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 0 to 1000!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "A minimum road capacity between 0 and 1000 " << std::endl;
+                }
+
                 if (inputNum >= 1 && inputNum <= 1000) {
                     minRoadCap = inputNum;
                     validInput = true;
@@ -151,8 +223,26 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for maximum roadCap
             while (!validInput) {
-            cout << "Enter the maximum possible road capacity in the road network (Valid: 1 - 500000): " << endl;
-            cin >> inputNum;
+                cout << "Enter the maximum possible road capacity in the road network (Valid: 1 - 500000): " << endl;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >500000)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 1 - 500000 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "The maximum road capacity vary from 1 to 500000 " << std::endl;
+                }
+
                 if (inputNum >= minRoadCap && inputNum >= 1 && inputNum <= 500000) {
                     maxRoadCap = inputNum;
                     validInput = true;
@@ -168,8 +258,26 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for minimum populationNum
             while (!validInput) {
-            cout << "Enter the minimum possible population for the cities (Valid: 1 - 1000): " << endl;
-            cin >> inputNum;
+                cout << "Enter the minimum possible population for the cities (Valid: 1 - 1000): " << endl;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >1000)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 0 - 1000 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "The population of a city vary from 1 to 1000 " << std::endl;
+                }
+
                 if (inputNum >= 1 && inputNum <= 1000) {
                     minPopulation = inputNum;
                     validInput = true;
@@ -185,8 +293,26 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for maximum populationNum
             while (!validInput) {
-            cout << "Enter the maximum possible population for the cities (Valid: 1 - 20000000): " << endl;
-            cin >> inputNum;
+                cout << "Enter the maximum possible population for the cities (Valid: 1 - 20000000): " << endl;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >20000000)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 1 - 20000000 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "Options contain 1 to 20000000 only. " << std::endl;
+                }
+
                 if (inputNum >= minPopulation && inputNum >= 1 && inputNum <= 20000000) {
                     maxPopulation = inputNum;
                     validInput = true;
@@ -225,7 +351,25 @@ int main(int argc, const char * argv[]) {
                 cout << "[4] Main menu: " << endl;
 
                 //Take in user choice
-                cin >> inputNum;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >4)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 1 - 4 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "Options contain 1 to 4 only. " << std::endl;
+                }
+
 
                 if (inputNum == 1) {
                     FF_Algo.PrintMaxFlow();
@@ -288,7 +432,25 @@ int main(int argc, const char * argv[]) {
                 cout << "[3] Both: " << endl;
                 cout << "[4] Main menu: " << endl;
 
-                cin >> inputNum;
+                try
+                {
+                    cin >> inputNum;
+                    if(inputNum<=0 || inputNum >5)
+                    {
+                        throw out_of_range("Invalid input");
+                    }
+                }
+                catch (const std::ios_base::failure &)
+                {
+                    std::cout  << "Please enter numbers from 1 - 4 only!" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                catch (const out_of_range)
+                {
+                    std::cout << "Options contain 1 to 4 only. " << std::endl;
+                }
+
 
                 if (inputNum == 1) {
                     onlyFF = true;
@@ -353,12 +515,12 @@ int main(int argc, const char * argv[]) {
         else if (inputNum == 4) {
             if (hurrEnable == true) {
                 hurrEnable = false;
-                cout << "Turned Off hurricane senario!" << endl;
+                cout << "Turned Off hurricane scenario!" << endl;
                 cout << endl;
             }
             else {
                 hurrEnable = true;
-                cout << "Turned On hurricane senario!" << endl;
+                cout << "Turned On hurricane scenario!" << endl;
                 cout << endl;
             }
         }
@@ -367,7 +529,7 @@ int main(int argc, const char * argv[]) {
             exit = true;
         }
         else {
-            cout << "Invalid input! Please try again." << endl;
+            cout << "Please try again" << endl;
         }
 
     }
