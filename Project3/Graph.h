@@ -27,7 +27,6 @@ public:
 	//Accessors
 	int GetSize() { return graph->size(); }
 	int GetWeight(string from, string to) {	return graph->find(from)->second[to]; };
-	set<string> GetAdjCities(string from);
 
 	//Output
 	void PrintGraph();

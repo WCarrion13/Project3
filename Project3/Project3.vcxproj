@@ -142,6 +142,7 @@
     <ClCompile Include="DataGenerator.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkFlow.cpp" />
     <ClCompile Include="Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="DataGenerator.h" />
     <ClInclude Include="FordFulkerson.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="PushRelabel.h" />
     <ClInclude Include="Randomizer.h" />
     <ClInclude Include="Reader.h" />
   </ItemGroup>

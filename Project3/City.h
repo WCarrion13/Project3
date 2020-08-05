@@ -22,28 +22,10 @@ public:
 	void AddAdjCity(map<string, int>* adjCities) { this->adjCities = adjCities; }
 
 	//Accessors
-	string GetName() {
-		return name;
-	}
-
-	int GetPopulation() {
-		return population;
-	}
-
-	int GetNumShelters() {
-		return numShelters;
-	}
-
-	int GetNumAdjCities() {
-		return numAdjCities;
-	}
-
-	map<string, int> GetShelters() {
-		return shelters;
-	}
-
-	map<string, int>* GetAdjCities() {
-		return adjCities;
-	}
-
+	string GetName() { return name; }
+	int GetPopulation() { return population; }
+	int GetNumShelters() { return numShelters; }
+	int GetNumAdjCities() {	return numAdjCities; }
+	map<string, int> GetShelters() { return shelters; }
+	map<string, int>* GetAdjCities() { return adjCities; }
 };

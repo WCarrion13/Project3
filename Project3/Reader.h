@@ -19,9 +19,9 @@ public:
 	//Accessors
 	Graph* GetGraph() { return graph; }		//Return the graph describing the connections between cities
 	map<string, City*>* GetCityList() { return cityList; }	//Return a list of every city and its object
-	string GetRandomCity();	//Find random city in graph
-	string GetRandomCity(string exclude);	//Find random city in graph, excluding input
-	string GetRandomCity(vector<string> exclude);	//Find random city in graph, excluding input
+	string GetRandomCity();							//Find random city in graph
+	string GetRandomCity(string exclude);			//Find random city in graph, excluding input
+	string GetRandomCity(vector<string> exclude);	//Find random city in graph, excluding inputs
 
 	//Mutators	
 	void AddAdjCities();		//Add adj city map to each city for easy access

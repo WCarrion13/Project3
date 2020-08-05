@@ -20,14 +20,6 @@ bool Graph::IsEdge(string from, string to) {
 	return false;
 }
 
-set<string> Graph::GetAdjCities(string from) {
-	set<string> adj;
-	for (auto iter = graph->begin(); iter != graph->end(); iter++)
-		for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++)
-			adj.insert(iter2->first);
-	return adj;
-}
-
 void Graph::PrintGraph() {
 	for (auto iter = graph->begin(); iter != graph->end(); iter++) {
 		cout << iter->first;
