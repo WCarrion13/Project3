@@ -81,7 +81,7 @@ void DataGenerator::GenerateCities() {
 	while (cityGraph->GetSize() < numCities) {		//Generate "numCities" additional cities
 		from = GenerateCityName();
 		int numAdjCities = (limits["adjCities"].second > cityGraph->GetSize()) ? cityGraph->GetSize() : GetRandInt(limits["adjCities"]);	//Ensure adj cities does not exceed existing city count
-		set<string> adjCities = {};
+		set<string> adjCities;
 		int adjCityIndex = 0;
 		for (int city = 0; city < numAdjCities; city++) {			//Generate connections to/from city
 			adjCityIndex = GetRandInt(0, cityGraph->GetSize() - 1);
