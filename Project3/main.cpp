@@ -6,9 +6,11 @@
 #include "PushRelabel.h"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
 
+    //Variable to turn off program
     bool exit = false;
+    //Keep track of if we want to create hurricane senario
+    bool hurrEnable = true;
 
     int inputNum;
 
@@ -17,8 +19,9 @@ int main(int argc, const char * argv[]) {
         cout << "Please enter one of the following options (e.g. 1): " << endl;
         cout << "[1] Generate random Road Network" << endl;
         cout << "[2] Enter your own parameters" << endl;
-        cout << "[3] Generate Max Flow of 100,000 Road Networks" << endl;
-        cout << "[4] Exit program" << endl;
+        cout << "[3] Generate Max Flow of 10,000 Road Networks" << endl;
+        cout << "[4] Toggle Hurricane output" << endl;
+        cout << "[5] Exit program" << endl;
 
         cin >> inputNum;
 
@@ -38,9 +41,8 @@ int main(int argc, const char * argv[]) {
 
             //Create FF object
             FordFulkerson FF_Algo(*cities, source, sink);
-            //Create hurricane and PR object
+            //Create PR object
             NetworkPR pushRelabel = NetworkPR(*cities);
-            // Create a hurricane
 
             bool validInput = false;
 
@@ -52,32 +54,45 @@ int main(int argc, const char * argv[]) {
                 cout << "[2] Push Relabel: " << endl;
                 cout << "[3] Both: " << endl;
                 cout << "[4] Main menu: " << endl;
+                cout << endl;
 
                 //Take in user choice
                 cin >> inputNum;
 
                 if (inputNum == 1) {
                     FF_Algo.PrintMaxFlow();
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 2) {
                     pushRelabel.printTheMaximumFlow(source, sink);
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 3) {
+                    //Max evacuation rate
+                    cout << "FF: ";
                     FF_Algo.PrintMaxFlow();
+                    cout << "PR: ";
                     pushRelabel.printTheMaximumFlow(source, sink);
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
@@ -195,7 +210,7 @@ int main(int argc, const char * argv[]) {
 
             //Create FF object
             FordFulkerson FF_Algo(*cities, source, sink);
-            //Create hurricane and PR object
+            //Create PR object
             NetworkPR pushRelabel = NetworkPR(*cities);
             // Create a hurricane
 
@@ -214,26 +229,38 @@ int main(int argc, const char * argv[]) {
 
                 if (inputNum == 1) {
                     FF_Algo.PrintMaxFlow();
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 2) {
                     pushRelabel.printTheMaximumFlow(source, sink);
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
                 else if (inputNum == 3) {
+                    //Max evacuation rate
+                    cout << "FF: ";
                     FF_Algo.PrintMaxFlow();
+                    cout << "PR: ";
                     pushRelabel.printTheMaximumFlow(source, sink);
-
+                    cout << endl;
                     //Create Hurricane
-                    pushRelabel.decisionMaking(source, sink);
+                    if (hurrEnable == true) {
+                        pushRelabel.decisionMaking(source, sink);
+                    }
+
                     //Exit loop
                     validInput = true;
                 }
@@ -247,9 +274,93 @@ int main(int argc, const char * argv[]) {
 
         }
         else if (inputNum == 3) {
+            cout << "Choose whether you want to get max flow from FF, PR, or both: " << endl;
+            cout << "[1] Ford Fulkerson: " << endl;
+            cout << "[2] Push Relabel: " << endl;
+            cout << "[3] Both: " << endl;
+            cout << "[4] Main menu: " << endl;
+
+            cin >> inputNum;
+
+            bool onlyFF = false;
+            bool onlyPR = false;
+            bool both = false;
+
+            bool validInput = false;
+
+            while (!validInput) {
+
+                if (inputNum == 1) {
+                    onlyFF = true;
+                    validInput = true;
+                }
+                else if (inputNum == 2) {
+                    onlyPR = true;
+                    validInput = true;
+                }
+                else if (inputNum == 3) {
+                    both = true;
+                    validInput = true;
+                }
+                else if (inputNum == 4) {
+                    validInput = true;
+                }
+                else {
+                    cout << "Invalid Input! Please Try Again" << endl;
+                }
+            }
+
+            if (onlyFF == true || onlyPR == true || both == true) {
+                cout << "Generating the Max Flow of 10,000 road networks each with 10 cities: " << endl;
+                cout << endl;
+
+                int maxNum = 10000;
+
+                for (int i = 0; i < maxNum; i++) {
+                    int numCities = 10;
+                    DataGenerator gen(numCities);
+                    Reader reader;
+                    string filename = "test.csv";
+
+                    gen.GenerateCities();        //Generate random data
+                    gen.OutputToCSV(filename);
+                    reader.ReadCSV(filename);    //Read data
+                    map<string, City*>* cities = reader.GetCityList();
+                    string source = reader.GetRandomCity();
+                    string sink = reader.GetRandomCity(source);
+
+                    if (onlyFF == true || both == true) {
+                        //Create FF object
+                        FordFulkerson FF_Algo(*cities, source, sink);
+                        //Print max flow
+                        cout << "FF: ";
+                        FF_Algo.PrintMaxFlow();
+                    }
+                    else if (onlyPR == true || both == true) {
+                        //Create PR object
+                        NetworkPR pushRelabel = NetworkPR(*cities);
+                        //Print max flow
+                        cout << "PR: ";
+                        pushRelabel.printTheMaximumFlow(source, sink);
+                    }
+                    cout << endl;
+                }
+            }
 
         }
         else if (inputNum == 4) {
+            if (hurrEnable == true) {
+                hurrEnable = false;
+                cout << "Turned Off hurricane senario!" << endl;
+                cout << endl;
+            }
+            else {
+                hurrEnable = true;
+                cout << "Turned On hurricane senario!" << endl;
+                cout << endl;
+            }
+        }
+        else if (inputNum == 5) {
             cout << "Terminating Program. Good Bye!" << endl;
             exit = true;
         }
