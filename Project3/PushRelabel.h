@@ -130,8 +130,6 @@ class NetworkPR
     void preflow(string source);
     // Function to reverse road
     void updateReverseEdgeFlow(int i, int flow);
-    //Hurrican generator
-
 public:
     Hurricane createHurricane();
     NetworkPR(int V);  // Constructor
@@ -141,14 +139,13 @@ public:
     ~NetworkPR();
     int matchingCity(string cityName);
     CityPR getCity(string nameCity);
-
     // function to add an road to graph
     void addRoad(string from, string to, int w);
     // returns maximum flow from s to t
     int getMaxFlow(string from, string to);
     string overFlowVertex(vector<CityPR>& ver, string source, string to);
     void neighboringCity (string name);
-    void printTheMaximumFlow(string from, string to);
+    void printTheMaximumFlow(string from, string to, int rate);
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
@@ -156,7 +153,7 @@ public:
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
-    void decisionMaking (string from, string to);
+    void decisionMaking (string from, string to, int rate);
 };
 NetworkPR::NetworkPR(int V)
 {
@@ -346,7 +343,6 @@ int NetworkPR::getMaxFlow(string s, string t)
         }
     }
     // city.back() returns last City, whose e_flow will be final maximum flow
-    //int cityE_flow = city[matchingCity(t)].e_flow;
     return city[matchingCity(t)].e_flow;
 }
 
@@ -376,9 +372,9 @@ void NetworkPR::initializeCity(string cityName, int population, int numShelter, 
     cityCopy = city;
 }
 
-void NetworkPR::printTheMaximumFlow(string from, string to)
+void NetworkPR::printTheMaximumFlow(string from, string to, int rate)
 {
-    int rate = getMaxFlow(from, to);
+    //int rate = getMaxFlow(from, to);
     cout << "Up to " << rate << " people per hour can evacuate from " << from <<" to " << to << endl;
 }
 
@@ -390,22 +386,14 @@ Hurricane NetworkPR::createHurricane()
     return Hurricane(randomSpeed, distance);
 }
 
-/*float NetworkPR::timeTakeToEvac(Hurricane hurricane, string from, string to) {
-    CityPR runAway = getCity(from);
-    int population = runAway.population;
-    int numberPeopleEvacPerHour = getMaxFlow(from, to); //
-    float totalTimeTakeToEvac = float(population)/numberPeopleEvacPerHour;
-    return totalTimeTakeToEvac;
-}*/
-
-void NetworkPR::decisionMaking(string from, string to) {
+void NetworkPR::decisionMaking(string from, string to, int rate) {
     Hurricane hurricane = createHurricane();
-    int numPeopleEvacPerHour = getMaxFlow(from, to);
+    //int numPeopleEvacPerHour = getMaxFlow(from, to);
 
     CityPR runAway = getCity(from);
     CityPR runTo = getCity(to);
     int populationCity = runAway.population;
-    float totalTimeTakeToEvac = float(populationCity)/numPeopleEvacPerHour;
+    float totalTimeTakeToEvac = float(populationCity)/rate;
     int timeMakeLandFall = hurricane.timeToMakeLandFall();
     cout<<"The hurricane's speed is "<< hurricane.getSpeed() << " per hour" <<endl;
     cout<<"It falls into "<< hurricane.getTheCategory()<<endl;
