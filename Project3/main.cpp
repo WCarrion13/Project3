@@ -337,7 +337,7 @@ int main(int argc, const char * argv[]) {
                         cout << "FF: ";
                         FF_Algo.PrintMaxFlow();
                     }
-                    else if (onlyPR == true || both == true) {
+                    if (onlyPR == true || both == true) {
                         //Create PR object
                         NetworkPR pushRelabel = NetworkPR(*cities);
                         //Print max flow
