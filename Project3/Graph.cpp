@@ -9,7 +9,7 @@ bool Graph::Exists(string key) {
 void Graph::InsertEdge(string from, string to, int weight) {
 	(*graph)[from][to] = weight;
 	if (graph->find(to) == graph->end())
-		(*graph)[to] = {};
+		(*graph)[to];
 }
 
 bool Graph::IsEdge(string from, string to) {
