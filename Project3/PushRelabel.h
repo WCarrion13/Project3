@@ -148,7 +148,7 @@ public:
     int getMaxFlow(string from, string to);
     string overFlowVertex(vector<CityPR>& ver, string source, string to);
     void neighboringCity (string name);
-    void printTheMaximumFlow(string from, string to, int rate);
+    void printTheMaximumFlow(string from, string to);
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
@@ -156,7 +156,7 @@ public:
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
-    void decisionMaking (string from, string to, Hurricane hurricane, int numPeopleEvac);
+    void decisionMaking (string from, string to);
 };
 NetworkPR::NetworkPR(int V)
 {
@@ -376,9 +376,10 @@ void NetworkPR::initializeCity(string cityName, int population, int numShelter, 
     cityCopy = city;
 }
 
-void NetworkPR::printTheMaximumFlow(string from, string to, int rate)
+void NetworkPR::printTheMaximumFlow(string from, string to)
 {
-    cout<< "The maximum amount of people that can evacuate to "<< to << " from" << from << " is: " << rate << "/hour" << endl;
+    int rate = getMaxFlow(from, to);
+    cout << "Up to " << rate << " per hour can evacuate from " << from <<" to " << to << endl;
 }
 
 Hurricane NetworkPR::createHurricane()
@@ -397,14 +398,16 @@ Hurricane NetworkPR::createHurricane()
     return totalTimeTakeToEvac;
 }*/
 
-void NetworkPR::decisionMaking(string from, string to, Hurricane hurricane, int numPeopleEvacPerHour) {
+void NetworkPR::decisionMaking(string from, string to) {
+    Hurricane hurricane = createHurricane();
+    int numPeopleEvacPerHour = getMaxFlow(from, to);
 
     CityPR runAway = getCity(from);
     CityPR runTo = getCity(to);
     int populationCity = runAway.population;
     float totalTimeTakeToEvac = float(populationCity)/numPeopleEvacPerHour;
     int timeMakeLandFall = hurricane.timeToMakeLandFall();
-    cout<<"The hurricane speed is "<< hurricane.getSpeed()<<endl;
+    cout<<"The hurricane speed is "<< hurricane.getSpeed() << " per hour" <<endl;
     cout<<"It falls into "<< hurricane.getTheCategory()<<endl;
     if(hurricane.getTheCategory() == "Category 5" || hurricane.getTheCategory() == "Category 4" || hurricane.getTheCategory() == "Category 3" )
     {
@@ -512,4 +515,3 @@ NetworkPR::NetworkPR(map<string, City *>& roadNetWork) {
     }
 
 }
-

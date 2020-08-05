@@ -23,7 +23,34 @@ DataGenerator::DataGenerator(int numCities) {
 	limits["roadCapacity"] = make_pair(200, 1500);
 	limits["population"] = make_pair(10000, 1000000);
 	limits["shelters"] = make_pair(0, 3);
-	limits["shelterCapacity"] = make_pair(1000, 10000);
+	//limits["shelterCapacity"] = make_pair(1000, 10000);
+}
+
+DataGenerator::DataGenerator (int numCities, int minRoadCap, int maxRoadCap, int minPopulation, int maxPopulation) {
+    cityGraph = new Graph;
+    this->numCities = numCities;
+
+    prefix.push_back("City of ");
+
+    suffix.push_back("ville");
+    suffix.push_back("town");
+    suffix.push_back("land");
+    suffix.push_back("ington");
+    suffix.push_back("ford");
+    suffix.push_back("ayton");
+    suffix.push_back("ester");
+    suffix.push_back("ton");
+    suffix.push_back("son");
+    suffix.push_back("urn");
+
+    limits["cityName"] = make_pair(5, 7);                //Generate various variable limits
+    limits["adjCities"] = make_pair(1, 3);
+    //Altered the road capacity to be more realistic
+    limits["roadCapacity"] = make_pair(minRoadCap, maxRoadCap);
+    limits["population"] = make_pair(minPopulation, maxPopulation);
+    limits["shelters"] = make_pair(0, 3);
+    //limits["shelterCapacity"] = make_pair(1000, 10000);
+
 }
 
 string DataGenerator::GenerateCityName() {
@@ -78,13 +105,13 @@ void DataGenerator::OutputToCSV(string filename) {
 	for (auto city = cityGraph->Begin(); city != cityGraph->End(); city++) {
 		int population = GetRandInt(limits["population"]);
 		int numShelters = GetRandInt(limits["shelters"]);
-		int numAdjCities = city->second.size();
+        int numAdjCities = city->second.size();
 
 		file << city->first << "," << population << "," << numShelters << ",";	//Print shelter info
 		for (int i = 0; i < numShelters; i++) {
 			string shelterName = "Shelter " + to_string(i);
-            //Made it so that every shelter has a capacity of 1000 people
-            int shelterCapacity = 1000; //GetRandInt(limits["shelterCapacity"]);
+            //Made it so that every shelter has a capacity of 10000 people
+            int shelterCapacity = 10000; //GetRandInt(limits["shelterCapacity"]);
 			file << shelterName << "," << shelterCapacity << ",";
 		}
 

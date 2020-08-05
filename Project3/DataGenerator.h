@@ -13,8 +13,9 @@ class DataGenerator {
 	int numCities;
 
 public:
-	/*Constructor*/
+	/*Constructors*/
 	DataGenerator(int numCities);
+  DataGenerator(int numCities, int minRoadCap, int maxRoadCap, int minPopulation, int maxPopulation);
 
 	/*Mutators*/
 	string GenerateCityName();
