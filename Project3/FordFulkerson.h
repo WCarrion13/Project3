@@ -176,7 +176,7 @@ public:
 
         //Continuing to update the maxFlow until there are no more paths to the destination node
         while (pathPossible) {
-            map<string, pair<string, int>> path;
+            map<string, pair<string, int> > path;
             path = BFS();
 
             if (path.find(destination) != path.end()) {
@@ -207,7 +207,7 @@ public:
 
     //Meant to debug BFS algorithm
     void PrintBFS() {
-        map<string,pair<string, int>> path = BFS();
+        map<string,pair<string, int> > path = BFS();
 
         for (auto it = path.begin(); it != path.end(); it++) {
             cout << "Child: " << it->first << " Parent: " << it->second.first;
