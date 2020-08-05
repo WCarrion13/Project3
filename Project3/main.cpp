@@ -118,14 +118,14 @@ int main(int argc, const char * argv[]) {
 
             //Loop until valid input inserted for number of Cities
             while (!validInput) {
-            cout << "Enter the number of cities in the road network (Valid: 5 - 500): " << endl;
+            cout << "Enter the number of cities in the road network (Valid: 5 - 200): " << endl;
             cin >> inputNum;
-                if (inputNum >= 5 && inputNum <= 500) {
+                if (inputNum >= 5 && inputNum <= 200) {
                     numCities = inputNum;
                     validInput = true;
                 }
                 else {
-                    cout << "Please enter valid input (Valid: 5 - 500): " << endl;
+                    cout << "Please enter valid input (Valid: 5 - 200): " << endl;
                 }
 
             }
@@ -349,6 +349,7 @@ int main(int argc, const char * argv[]) {
             }
 
         }
+
         else if (inputNum == 4) {
             if (hurrEnable == true) {
                 hurrEnable = false;
