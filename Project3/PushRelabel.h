@@ -12,7 +12,6 @@ class Hurricane
     int speed;          // kilometer/hr
     int distance;       // in kilometer
     string category;
-
 public:
     Hurricane(int speed, int distance)
     {
@@ -56,7 +55,7 @@ public:
     {
         return category;
     }
-    int timeToMakeLandFall()
+    int timeToMakeLandFall() const
     {
         return distance/speed; // in hour
     }
@@ -98,13 +97,7 @@ public:
         this->h = h;
         this->e_flow = e_flow;
     }
-    /* City(int h, int e_flow, int _population, string name)
-     {
-         this->population = _population;
-         this->h = h;
-         this->e_flow = e_flow;
-         this->name = name;
-     }*/
+
     CityPR(int h, int e_flow, int _population, int _numShelter, int _shelterCapacity, string nameCity)
     {
         this->name = nameCity;
@@ -148,28 +141,27 @@ public:
     ~NetworkPR();
     int matchingCity(string cityName);
     CityPR getCity(string nameCity);
-    //void pairingCityWithNumber();
+
     // function to add an road to graph
     void addRoad(string from, string to, int w);
     // returns maximum flow from s to t
     int getMaxFlow(string from, string to);
     string overFlowVertex(vector<CityPR>& ver, string source, string to);
     void neighboringCity (string name);
-    void printTheMaximumFlow(string from, string to);
+    void printTheMaximumFlow(string from, string to, int rate);
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
     //Calculate the time for people to evac
-    float timeTakeToEvac(Hurricane hurricane, string from, string to);
+    // float timeTakeToEvac(Hurricane hurricane, string from, string to);
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
-    void decisionMaking (float timeEvac, string from, string to, Hurricane hurricane);
-
+    void decisionMaking (string from, string to, Hurricane hurricane, int numPeopleEvac);
 };
 NetworkPR::NetworkPR(int V)
 {
     this->V = V;
-    // all cities are initialized with 0 height and 0 excess flow
+    //all cities are initialized with 0 height and 0 excess flow
 }
 
 
@@ -228,11 +220,11 @@ void NetworkPR::preflow(string source)
         {
             // Flow is equal to capacity
             road[i].flow = road[i].capacity;
-            int roadFlow = road[i].flow;
+            //int roadFlow = road[i].flow;
             // Initialize excess flow for adjacent v
-            int cityE_flow = city[matchingCity(road[i].to)].e_flow;
+            //int cityE_flow = city[matchingCity(road[i].to)].e_flow;
             city[matchingCity(road[i].to)].e_flow += road[i].flow;
-            int cityE_flow2 = city[matchingCity(road[i].to)].e_flow;
+            //int cityE_flow2 = city[matchingCity(road[i].to)].e_flow;
 
             // Add an road from v to s in residual graph with
             // capacity equal to 0
@@ -247,8 +239,6 @@ string NetworkPR::overFlowVertex(vector<CityPR>& ver, string s, string t)
     for(int i = 0; i < ver.size(); i++)
     {
         string cityNameToCompare = cityName[i];
-        //cout<<"e_flow of vertex "<<cityNameToCompare<<ver[i].e_flow<<endl;
-        int verE_flow = ver[i].e_flow;
         if(cityNameToCompare!= s && cityNameToCompare!= t && ver[i].e_flow>0)
         {
             return cityNameToCompare;
@@ -356,7 +346,7 @@ int NetworkPR::getMaxFlow(string s, string t)
         }
     }
     // city.back() returns last City, whose e_flow will be final maximum flow
-    int cityE_flow = city[matchingCity(t)].e_flow;
+    //int cityE_flow = city[matchingCity(t)].e_flow;
     return city[matchingCity(t)].e_flow;
 }
 
@@ -379,8 +369,6 @@ void NetworkPR::neighboringCity(string name) {
             cout<<"City "<< road[i].from<< " connects to city "<< name <<endl;
         }
     }
-
-
 }
 
 void NetworkPR::initializeCity(string cityName, int population, int numShelter, int shelterCapacity) {
@@ -388,10 +376,9 @@ void NetworkPR::initializeCity(string cityName, int population, int numShelter, 
     cityCopy = city;
 }
 
-void NetworkPR::printTheMaximumFlow(string from, string to)
+void NetworkPR::printTheMaximumFlow(string from, string to, int rate)
 {
-    int rate = getMaxFlow(from,to);
-    cout << "The maximum amount of people that can evacuate to "<< to << " from" << from << " is: " << rate << "/hour" << endl;
+    cout<< "The maximum amount of people that can evacuate to "<< to << " from" << from << " is: " << rate << "/hour" << endl;
 }
 
 Hurricane NetworkPR::createHurricane()
@@ -402,25 +389,27 @@ Hurricane NetworkPR::createHurricane()
     return Hurricane(randomSpeed, distance);
 }
 
-float NetworkPR::timeTakeToEvac(Hurricane hurricane, string from, string to) {
+/*float NetworkPR::timeTakeToEvac(Hurricane hurricane, string from, string to) {
     CityPR runAway = getCity(from);
     int population = runAway.population;
     int numberPeopleEvacPerHour = getMaxFlow(from, to); //
     float totalTimeTakeToEvac = float(population)/numberPeopleEvacPerHour;
     return totalTimeTakeToEvac;
-}
+}*/
 
-void NetworkPR::decisionMaking(float timeEvac, string from, string to, Hurricane hurricane) {
+void NetworkPR::decisionMaking(string from, string to, Hurricane hurricane, int numPeopleEvacPerHour) {
+
     CityPR runAway = getCity(from);
     CityPR runTo = getCity(to);
     int populationCity = runAway.population;
+    float totalTimeTakeToEvac = float(populationCity)/numPeopleEvacPerHour;
     int timeMakeLandFall = hurricane.timeToMakeLandFall();
     cout<<"The hurricane speed is "<< hurricane.getSpeed()<<endl;
     cout<<"It falls into "<< hurricane.getTheCategory()<<endl;
     if(hurricane.getTheCategory() == "Category 5" || hurricane.getTheCategory() == "Category 4" || hurricane.getTheCategory() == "Category 3" )
     {
         cout<<"DANGER: THE HURRICANE IS DESTRUCTIVE.\nREQUIRE REPAIR IN ADVANCE";
-        if(timeMakeLandFall < timeEvac)
+        if(timeMakeLandFall < totalTimeTakeToEvac)
         {
             cout<<"NEEDS TO EVACUATE THE SYSTEM ASAP\n";
             int totalCapacityCityCanHold = runTo.capacity;
@@ -518,7 +507,7 @@ NetworkPR::NetworkPR(map<string, City *>& roadNetWork) {
         for (auto it2 = (*adjCities).begin(); it2 != (*adjCities).end(); it2++) {
             addRoad(it->first,it2->first,it2->second);
             //Road currentRoad = Road(0, it2->second, it->first, it2->first);
-            //road.push_back(currentRoad);
+           // road.push_back(currentRoad);
         }
     }
 
