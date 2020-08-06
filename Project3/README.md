@@ -8,10 +8,10 @@ The entire project will be run from terminal or command line.
 
 ### 1.
 
-On terminal or command line you must be in the directory that contains this README file and the Makefile
+On terminal or command line you must be in the directory that contains this README file and the Makefile are located
 
 ```bash
-cd Code_Group.43
+cd Code_Group43
 ls
 CMakeLists.txt			Project3.vcxproj.filters
 City.h				      PushRelabel.h
@@ -53,7 +53,7 @@ Please enter one of the following options (e.g. 1):
 ```
 The only valid inputs are the integers specified.
 If a string or char is entered the program may or may not fail.
-We have had mixed success with containing this so it is better that you only enter integers.
+We have had mixed success with containing this so it is better that you only enter integers. 
 
 1. The first option creates a random Road Network for the user and then they can choose to either have the Ford-Fulkerson, Push-Relabel, or both output the maximum flow of the random road network.
 
