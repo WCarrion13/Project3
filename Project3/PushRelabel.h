@@ -148,8 +148,6 @@ public:
     void printTheMaximumFlow(string from, string to);
     //Intialize the city with population
     void initializeCity (string name, int population, int numShelter, int shelterCapacity);
-    //Calculate the time for people to evac
-    // float timeTakeToEvac(Hurricane hurricane, string from, string to);
     //Get the list of cities that the current city connect to
     vector <CityPR> connectTo (string name);
     // Get the info of nearby cities that has a way to go over
